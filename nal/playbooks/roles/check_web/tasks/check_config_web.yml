@@ -1,0 +1,40 @@
+---
+## SELinux
+- name: <WEB> Check state by getenforce
+  shell: |
+    getenforce | grep Permissive
+  changed_when: false
+
+- name: <WEB> Check configuration of SELinux config
+  shell: |
+    grep '^SELINUX *= *disabled$' /etc/selinux/config
+  changed_when: false
+
+## /etc/hosts
+- name: <WEB> Check /etc/hosts
+  shell: |
+    grep "^{{ item.ip }}.*{{ item.name }}" /etc/hosts
+  changed_when: false
+  with_items:
+    - ip: "{{ nal.web.nodes[0].svmng_ip }}"
+      name: "{{ nal.web.nodes[0].name }}"
+    - ip: "{{ nal.web.nodes[1].svmng_ip }}"
+      name: "{{ nal.web.nodes[1].name }}"
+
+## firewalld
+- name: <WEB> Check accept port
+  shell: |
+    iptables-save | grep "\-\-dport 80" | grep "\-j ACCEPT"
+  changed_when: false
+
+## httpd
+- name: <WEB> Check configuration of httpd
+  shell: |
+    grep "{{ item[0] }} .*/.*http://{{ item[1] }}" /etc/httpd/conf.d/nal.conf
+  changed_when: false
+  with_nested:
+    - [ 'ProxyPass', 'ProxyPassReverse' ]
+    - [ "{{ nal.ap.fip.ip }}" ]
+
+
+

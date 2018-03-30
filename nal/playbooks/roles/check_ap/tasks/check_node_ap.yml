@@ -1,0 +1,12 @@
+---
+- name: <AP> Check ping to db
+  shell: |
+    ping -c 1 {{ item }}
+  changed_when: false
+  with_items:
+    - "{{ nal.db.nodes[0].svmng_ip }}"
+    - "{{ nal.db.nodes[1].svmng_ip }}"
+    - "{{ nal.db.fip.ip }}"
+    - "{{ nal.ap.wim_fip.ip }}"
+    - "{{ wim.ap.wim_fip.ip }}"
+

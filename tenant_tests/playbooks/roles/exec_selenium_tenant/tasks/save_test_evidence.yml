@@ -1,0 +1,32 @@
+---
+# Fetch evidence files
+- name: Find evidence directory
+  command: find ./ -mindepth 1 -maxdepth 1 -type d
+  args:
+    chdir: "{{ evidence_dir }}"
+  register: dir_list
+
+- name: Arcive evidence directory
+  command: tar -zcvpf {{ item }}.tar.gz {{ item }}
+  args:
+    chdir: "{{ evidence_dir }}"
+  with_items: "{{ dir_list.stdout_lines }}"
+
+- name: Fetch arcives file
+  fetch:
+    src: "{{ evidence_dir }}/{{ item }}.tar.gz"
+    dest: "{{ output_dir }}"
+  with_items: "{{ dir_list.stdout_lines }}"
+
+- name: Delete arcives file
+  file:
+    path: "{{ evidence_dir }}/{{ item }}.tar.gz"
+    state: absent
+  with_items: "{{ dir_list.stdout_lines }}"
+
+- name: Delete evidencs directory
+  file:
+    path: "{{ evidence_dir }}/{{ item }}"
+    state: absent
+  with_items: "{{ dir_list.stdout_lines }}"
+

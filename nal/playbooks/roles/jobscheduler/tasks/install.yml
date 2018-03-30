@@ -1,0 +1,31 @@
+---
+- name: Check existing app file
+  stat:
+    path: "/opt/jobscheduler/{{ inventory_hostname }}/bin/jobscheduler.sh"
+  register: result_file
+  ignore_errors: yes
+
+- name: Setup jobScheduler
+  become: yes
+  become_user: "{{ job_user.name }}"
+  command: ./setup.sh -u jobscheduler_install.xml
+  args:
+    chdir: "{{ jobscheduler.work_dir2 }}"
+  when: result_file.stat.exists == false
+
+- name: Check process
+  shell: ps -ef | grep jobscheduler | grep -v grep
+  register: result_process
+  ignore_errors: yes
+
+- name: Stop service
+  shell: |
+    {{ jobscheduler.app_dir }}/{{ inventory_hostname }}/bin/jobscheduler.sh stop
+  when: result_process.stdout != ""
+
+- name: Change value of SCHEDULER_USER
+  lineinfile:
+    dest: "/opt/jobscheduler/{{ inventory_hostname }}/bin/jobscheduler_environment_variables.sh"
+    regexp: "^SCHEDULER_USER=ansible"
+    line: "SCHEDULER_USER=nsumsmgr"
+

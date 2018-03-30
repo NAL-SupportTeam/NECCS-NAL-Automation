@@ -1,0 +1,10 @@
+---
+- name: <WEB> Check ping to ap
+  shell: |
+    ping -c 1 {{ item }}
+  changed_when: false
+  with_items:
+    - "{{ nal.ap.nodes[0].svmng_ip }}"
+    - "{{ nal.ap.nodes[1].svmng_ip }}"
+    - "{{ nal.ap.fip.ip }}"
+

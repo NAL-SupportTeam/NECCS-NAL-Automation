@@ -1,0 +1,129 @@
+---
+## SELinux
+- name: <AP> Check state by getenforce
+  shell: |
+    getenforce | grep Permissive
+  changed_when: false
+
+- name: <AP> Check configuration of SELinux config
+  shell: |
+    grep '^SELINUX *= *disabled$' /etc/selinux/config
+  changed_when: false
+
+## /etc/hosts
+- name: <AP> Check /etc/hosts
+  shell: |
+    grep "^{{ item.ip }}.*{{ item.name }}" /etc/hosts
+  changed_when: false
+  with_items:
+    - ip: "{{ nal.ap.nodes[0].svmng_ip }}"
+      name: "{{ nal.ap.nodes[0].name }}"
+    - ip: "{{ nal.ap.nodes[1].svmng_ip }}"
+      name: "{{ nal.ap.nodes[1].name }}"
+    - ip: "{{ nal.ap.fip.ip }}"
+      name: "{{ nal.ap.fip.name }}"
+
+## firewalld
+- name: <AP> Check accept port
+  shell: |
+    iptables-save | grep "\-\-dport 80" | grep "\-j ACCEPT"
+  changed_when: false
+
+## mariadb
+- name: <AP> Check existing nal tables
+  shell: |
+    mysql -h localhost -pi-portal -D scheduler -e "show tables;" | grep SCHEDULER_VARIABLES
+  changed_when: false
+  when: job_type == 'jobscheduler' and hostvars[inventory_hostname].is_first_active_node == "active"
+
+## httpd
+- name: <AP> Check configuration of httpd
+  shell: |
+    grep "{{ item }}" /etc/httpd/conf/httpd.conf
+  changed_when: false
+  with_items:
+    - "^Timeout.*2700"
+
+## nal-api
+- name: <AP> Check configuration for nal-api
+  shell: |
+    grep "    const {{ item }};" /var/www/html/Nal/api/Nal/Config.php
+  changed_when: false
+  with_items:
+    - "API_URL = 'http://{{ nal.db.fip.ip }}/'"
+    - "WIM_API_URL = 'http://{{ wim.ap.wim_fip.ip }}/Wim/'"
+    - "NAL_API_URL = 'http://{{ nal.ap.nodes[hostvars[inventory_hostname].index].dcmng_ip }}/Nal/'"
+    - "MY_DC_ID = '{{ dc_name }}'"
+
+## wim-api
+- name: <AP> Check configuration for wim-api
+  shell: |
+    grep "    const {{ item }};" /var/www/html/Wim/api/Nal/Config.php
+  changed_when: false
+  with_items:
+    - "API_URL = 'http://{{ nal.db.fip.ip }}/'"
+    - "WIM_API_URL = 'http://{{ wim.ap.wim_fip.ip }}/Wim/'"
+    - "NAL_API_URL = 'http://{{ nal.ap.nodes[hostvars[inventory_hostname].index].dcmng_ip }}/Nal/'"
+    - "MY_DC_ID = '{{ dc_name }}'"
+
+- name: <AP> Check configuration for nal-api (for JobCenter)
+  shell: |
+    grep "'job_type' *=> *'1'," {{ item }}
+  changed_when: false
+  with_items:
+    - /var/www/html/Nal/api/Nal/Config.php
+    - /var/www/html/Wim/api/Nal/Config.php
+  when: job_type == 'jobcenter'
+
+- name: <AP> Check configuration for nal-api (for JobScheduler)
+  shell: |
+    grep "'job_type' *=> *'2'," {{ item }}
+  changed_when: false
+  with_items:
+    - /var/www/html/Nal/api/Nal/Config.php
+    - /var/www/html/Wim/api/Nal/Config.php
+  when: job_type == 'jobscheduler'
+
+## nal-job
+- name: <AP> Check exist directory for nal-job
+  stat:
+    path: "/home/{{ job_user.name }}/NAL/nwa/sh"
+  changed_when: false
+
+## nal-nwa
+- name: <AP> Check exist directory and files for nal-nwa
+  stat:
+    path: "{{ item }}"
+  changed_when: false
+  with_items:
+    - "/home/{{ job_user.name }}/NAL/nwa/job"
+    - "/home/{{ job_user.name }}/NAL/nwa/job/auth/id_rsa"
+    - "/home/{{ job_user.name }}/NAL/nwa/job/auth/id_rsa.pub"
+    - "/home/{{ job_user.name }}/NAL/nwa/job/auth/id_rsa_msa_to_intersec.pub"
+
+- name: <AP> Check configuration for nal-nwa
+  shell: |
+    grep "{{ item }}" /home/{{ job_user.name }}/NAL/nwa/job/conf/configrel.py
+  changed_when: false
+  with_items:
+    - "    REST_ENDPOINT = 'http://{{ nal.db.fip.ip }}/rest/api/index.py/'"
+
+## JobScheduler
+- name: <AP> Check exist directory of job define file for JobScheduler
+  stat:
+    path: "/home/{{ job_user.name }}/jobscheduler/{{ inventory_hostname }}/config/live/NAL/common"
+  changed_when: false
+  when: job_type == 'jobscheduler'
+
+## logrotate
+- name: <AP> Check configurateion for logrotate
+  shell: |
+    grep "{{ item }}" /etc/logrotate.d/httpd
+  changed_when: false
+  with_items:
+    - "/var/log/httpd/\\*log"
+    - "/var/log/nal/nal_api_trace.log"
+    - "/var/log/nal/nal_automation_trace.log"
+    - "/var/log/nal/nal_job_trace.log"
+
+

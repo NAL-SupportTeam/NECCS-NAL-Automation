@@ -1,0 +1,828 @@
+# Base URL. Environment for testing.
+# As for the URL, the last slash is unnecessary.
+SET_BASE_URL = "{{ selenium_config['common'].base_url }}"
+# Login user
+USER_NAME = "{{ selenium_config['common'].login_user_name }}"
+USER_PASSWORD = "{{ selenium_config['common'].login_user_password }}"
+PROJECT_NAME = "{{ selenium_config['common'].login_project_name }}"
+# Version set
+SET_NAL_VERSION = "4.1"
+
+# Global portal's URL
+SET_GLOBAL_BASE_URL = "{{ selenium_config['common'].base_url_global }}"
+
+# Admin user information
+ADMIN_USER_NAME = "{{ selenium_config['common'].admin_user_name }}"
+ADMIN_USER_PASSWORD = "{{ selenium_config['common'].admin_user_password }}"
+ADMIN_PROJECT_NAME = "{{ selenium_config['common'].admin_project_name }}"
+
+# role list for NAL create
+CREATE_ROLE_LIST = {{ selenium_config['common'].create_role_list }}
+
+# Role list setting for test
+SET_ROLE_LIST = {{ selenium_config['common'].set_role_list }}
+ADMIN_ROLE_LIST = {{ selenium_config['common'].admin_role_list }}
+
+# Display language
+SET_LANGUAGE = "en"
+# Width of the window.
+SET_WIDTH = 1280
+# Height of the window.
+SET_HEIGHT = 960
+# Timeout.
+SET_TIMEOUT = 5
+# Capture of location.
+SET_EVIDENCE = "/home/nal/function_tests/selenium_test/evidence/"
+# Profile path
+SET_PROFILE_PATH = "/root/.mozilla/firefox/"
+# Timeout setting of Create.
+SET_CREATE_WAITTIME = 30
+SET_CREATE_RETRYCOUNT = 120
+# Timeout setting of Update.
+SET_UPDATE_WAITTIME = 30
+SET_UPDATE_RETRYCOUNT = 30
+# Timeout setting of Delete.
+SET_DELETE_WAITTIME = 30
+SET_DELETE_RETRYCOUNT = 30
+
+# Setting for environment construction
+ZABBIX_VIP_IP = "{{ selenium_config['common'].zabbix_vip_ip }}"
+ZABBIX_01_IP = "{{ selenium_config['common'].zabbix_01_ip }}"
+ZABBIX_02_IP = "{{ selenium_config['common'].zabbix_02_ip }}"
+DNS_PRIMARY_IP = "{{ selenium_config['common'].dns_primary_ip }}"
+DNS_SECONDARY_IP = "{{ selenium_config['common'].dns_secondary_ip }}"
+NTP_PRAMARY_IP = "{{ selenium_config['common'].ntp_pramary_ip }}"
+NTP_SECONDARY_IP = "{{ selenium_config['common'].ntp_secondary_ip }}"
+INTERSEC_EXT_IPV6_ADDRESS = ""
+FORTIGATEVM_524_EXT_IPV6_ADDRESS = ""
+FORTIGATEVM_524_PUB_IPV6_ADDRESS = ""
+PALOALTOVM_EXT_IPV6_ADDRESS = ""
+PALOALTOVM_PUB_IPV6_ADDRESS = ""
+INTERSECVM_PUB_IPV6_ADDRESS = ""
+FORTIGATEVM_541_EXT_IPV6_ADDRESS = ""
+FORTIGATEVM_541_PUB_IPV6_ADDRESS = ""
+FORTIGATE_EXT_IPV6_ADDRESS = ""
+FORTIGATE_PUB_IPV6_ADDRESS = ""
+FORTIGATE_SHARE_EXT_IPV6_ADDRESS = ""
+FORTIGATE_SHARE_PUB_IPV6_ADDRESS = ""
+PALOALTO_EXT_IPV6_ADDRESS = ""
+PALOALTO_PUB_IPV6_ADDRESS = ""
+PALOALTO_SHARE_EXT_IPV6_ADDRESS = ""
+PALOALTO_SHARE_PUB_IPV6_ADDRESS = ""
+WEB_CLIENT_IP = ""
+
+NETWORK_NAME_01 = "{{ selenium_config['common'].network_name_01 }}"
+SUBNET_NAME_01 = "{{ selenium_config['common'].subnet_name_01 }}"
+NETWORK_ADDRESS_01 = "{{ selenium_config['common'].network_address_01 }}"
+
+NETWORK_NAME_02 = "{{ selenium_config['common'].network_name_02 }}"
+SUBNET_NAME_02 = "{{ selenium_config['common'].subnet_name_02 }}"
+NETWORK_ADDRESS_02 = "{{ selenium_config['common'].network_address_02 }}"
+
+SUBNET_NAME_03 = "{{ selenium_config['common'].subnet_name_03 }}"
+NETWORK_ADDRESS_03 = "{{ selenium_config['common'].network_address_03 }}"
+
+REDUNDANT_CONF_FLG_01 = "Redundancy"
+REDUNDANT_CONF_FLG_02 = "Single"
+
+SELECT_SUBNET_01 = NETWORK_NAME_01 + ": " + NETWORK_ADDRESS_01 + " (" + SUBNET_NAME_01 + ")"
+SELECT_SUBNET_02 = NETWORK_NAME_02 + ": " + NETWORK_ADDRESS_02 + " (" + SUBNET_NAME_02 + ")"
+SELECT_SUBNET_V6_01 = NETWORK_NAME_01 + ": " + NETWORK_ADDRESS_03 + " (" + SUBNET_NAME_03 + ")"
+
+#----------------------------------------------------------------
+# Provisioning
+#----------------------------------------------------------------
+PROVISIONING_CREATE_NETWORK_1_PARAMS = {
+    "net_name": NETWORK_NAME_01,
+    "subnet_name": SUBNET_NAME_01,
+    "network_address": NETWORK_ADDRESS_01
+}
+
+PROVISIONING_CREATE_NETWORK_2_PARAMS = {
+    "net_name": NETWORK_NAME_02,
+    "subnet_name": SUBNET_NAME_02,
+    "network_address": NETWORK_ADDRESS_02
+}
+
+PROVISIONING_ADD_SUBNET_1_PARAMS = {
+    "net_name": NETWORK_NAME_01,
+    "subnet_name": SUBNET_NAME_03,
+    "network_address": NETWORK_ADDRESS_03
+}
+
+# ---------------------------------------------------------------
+# InterSecVM SG for Ext
+# ---------------------------------------------------------------
+NODE_INTERSECVM_EXT_CREATE_PARAMS = {
+    "apl_type": "1",
+    "type": "1",
+    "device_type": "1",
+    "subnet_info": SELECT_SUBNET_01,
+    "host_name": "{{ selenium_config['intersecvm_sg_for_ext'].host_name }}",
+    "webclient_ip": WEB_CLIENT_IP,
+    "zabbix_vip_ip": ZABBIX_VIP_IP,
+    "zabbix_01_ip": ZABBIX_01_IP,
+    "zabbix_02_ip": ZABBIX_02_IP,
+    "ntp_server_primary": NTP_PRAMARY_IP
+}
+
+NODE_INTERSECVM_EXT_ADD_INTERFACE_PARAMS = {
+    "host_name": "{{ selenium_config['intersecvm_sg_for_ext'].host_name }}",
+    "subnet_info": SELECT_SUBNET_02
+}
+
+NODE_INTERSECVM_EXT_ADD_V6_INTERFACE_PARAMS = {
+    "host_name": "{{ selenium_config['intersecvm_sg_for_ext'].host_name }}",
+    "subnet_info": SELECT_SUBNET_V6_01,
+    "ip_v6_ext_auto_set_flg": "1"
+}
+if INTERSEC_EXT_IPV6_ADDRESS != "":
+    NODE_INTERSECVM_EXT_ADD_V6_INTERFACE_PARAMS["ip_v6_ext_auto_set_flg"] = "0"
+    NODE_INTERSECVM_EXT_ADD_V6_INTERFACE_PARAMS["fixed_ip_v6_ext"] = INTERSEC_EXT_IPV6_ADDRESS
+
+NODE_INTERSECVM_EXT_DELETE_PARAMS = {
+    "host_name": "{{ selenium_config['intersecvm_sg_for_ext'].host_name }}"
+}
+
+# ---------------------------------------------------------------
+# FortiGateVM
+# ---------------------------------------------------------------
+NODE_FOORTIGATEVM_CREATE_PARAMS = {
+    "apl_type": "1",
+    "type": "1",
+    "device_type": "2",
+    "subnet_info": SELECT_SUBNET_01,
+    "host_name": "{{ selenium_config['fortigatevm'].host_name }}",
+    "admin_id": "nalid",
+    "admin_pw": "nalpw",
+    "dns_server_primary": DNS_PRIMARY_IP,
+    "dns_server_secondary": DNS_SECONDARY_IP,
+    "ntp_server_primary": NTP_PRAMARY_IP,
+    "ntp_server_secondary": NTP_SECONDARY_IP
+}
+
+NODE_FOORTIGATEVM_ADD_INTERFACE_PARAMS = {
+    "host_name": "{{ selenium_config['fortigatevm'].host_name }}",
+    "subnet_info": SELECT_SUBNET_02
+}
+
+NODE_FOORTIGATEVM_ADD_V6_INTERFACE_PARAMS = {
+    "host_name": "{{ selenium_config['fortigatevm'].host_name }}",
+    "subnet_info": SELECT_SUBNET_V6_01,
+    "ip_v6_ext_auto_set_flg": "1",
+    "ip_v6_pub_auto_set_flg": "1"
+}
+if FORTIGATEVM_524_EXT_IPV6_ADDRESS != "":
+    NODE_FOORTIGATEVM_ADD_V6_INTERFACE_PARAMS["ip_v6_ext_auto_set_flg"] = "0"
+    NODE_FOORTIGATEVM_ADD_V6_INTERFACE_PARAMS["fixed_ip_v6_ext"] = FORTIGATEVM_524_EXT_IPV6_ADDRESS
+if FORTIGATEVM_524_PUB_IPV6_ADDRESS != "":
+    NODE_FOORTIGATEVM_ADD_V6_INTERFACE_PARAMS["ip_v6_pub_auto_set_flg"] = "0"
+    NODE_FOORTIGATEVM_ADD_V6_INTERFACE_PARAMS["fixed_ip_v6_pub"] = FORTIGATEVM_524_PUB_IPV6_ADDRESS
+
+NODE_FOORTIGATEVM_DELETE_PARAMS = {
+    "host_name": "{{ selenium_config['fortigatevm'].host_name }}"
+}
+
+# ---------------------------------------------------------------
+# PaloAltoVM
+# ---------------------------------------------------------------
+NODE_PALOALTOVM_CREATE_PARAMS = {
+    "apl_type": "1",
+    "type": "1",
+    "device_type": "3",
+    "subnet_info": SELECT_SUBNET_01,
+    "host_name": "{{ selenium_config['paloaltovm'].host_name }}",
+    "admin_id": "nalid",
+    "admin_pw": "nalpw",
+    "pavm_zone_name": "zone1",
+    "dns_server_primary": DNS_PRIMARY_IP,
+    "dns_server_secondary": DNS_SECONDARY_IP,
+    "ntp_server_primary": NTP_PRAMARY_IP,
+    "ntp_server_secondary": NTP_SECONDARY_IP
+}
+
+NODE_PALOALTOVM_ASSIGN_LICENSE_PARAMS = {
+    "host_name": "{{ selenium_config['paloaltovm'].host_name }}"
+}
+
+NODE_PALOALTOVM_ADD_INTERFACE_PARAMS = {
+    "host_name": "{{ selenium_config['paloaltovm'].host_name }}",
+    "subnet_info": SELECT_SUBNET_02,
+    "pavm_zone_name": "zone1"
+}
+
+NODE_PALOALTOVM_ADD_V6_INTERFACE_PARAMS = {
+    "host_name": "{{ selenium_config['paloaltovm'].host_name }}",
+    "subnet_info": SELECT_SUBNET_V6_01,
+    "ip_v6_ext_auto_set_flg": "1",
+    "ip_v6_pub_auto_set_flg": "1"
+}
+if PALOALTOVM_EXT_IPV6_ADDRESS != "":
+    NODE_PALOALTOVM_ADD_V6_INTERFACE_PARAMS["ip_v6_ext_auto_set_flg"] = "0"
+    NODE_PALOALTOVM_ADD_V6_INTERFACE_PARAMS["fixed_ip_v6_ext"] = PALOALTOVM_EXT_IPV6_ADDRESS
+if PALOALTOVM_PUB_IPV6_ADDRESS != "":
+    NODE_PALOALTOVM_ADD_V6_INTERFACE_PARAMS["ip_v6_pub_auto_set_flg"] = "0"
+    NODE_PALOALTOVM_ADD_V6_INTERFACE_PARAMS["fixed_ip_v6_pub"] = PALOALTOVM_PUB_IPV6_ADDRESS
+
+NODE_PALOALTOVM_DELETE_PARAMS = {
+    "host_name": "{{ selenium_config['paloaltovm'].host_name }}"
+}
+
+# ---------------------------------------------------------------
+# InterSecVM SG for Pub
+# ---------------------------------------------------------------
+NODE_INTERSECVM_PUB_CREATE_PARAMS = {
+    "apl_type": "1",
+    "type": "1",
+    "device_type": "4",
+    "subnet_info": SELECT_SUBNET_01,
+    "host_name": "{{ selenium_config['intersecvm_sg_for_pub'].host_name }}",
+    "webclient_ip": WEB_CLIENT_IP,
+    "zabbix_vip_ip": ZABBIX_VIP_IP,
+    "zabbix_01_ip": ZABBIX_01_IP,
+    "zabbix_02_ip": ZABBIX_02_IP,
+    "ntp_server_primary": NTP_PRAMARY_IP
+}
+
+NODE_INTERSECVM_PUB_ADD_INTERFACE_PARAMS = {
+    "host_name": "{{ selenium_config['intersecvm_sg_for_pub'].host_name }}",
+    "subnet_info": SELECT_SUBNET_02
+}
+
+NODE_INTERSECVM_PUB_ADD_V6_INTERFACE_PARAMS = {
+    "host_name": "{{ selenium_config['intersecvm_sg_for_pub'].host_name }}",
+    "subnet_info": SELECT_SUBNET_V6_01,
+    "ip_v6_pub_auto_set_flg": "1"
+}
+if INTERSECVM_PUB_IPV6_ADDRESS != "":
+    NODE_INTERSECVM_PUB_ADD_V6_INTERFACE_PARAMS["ip_v6_pub_auto_set_flg"] = "0"
+    NODE_INTERSECVM_PUB_ADD_V6_INTERFACE_PARAMS["fixed_ip_v6_pub"] = INTERSECVM_PUB_IPV6_ADDRESS
+
+NODE_INTERSECVM_PUB_DELETE_PARAMS = {
+    "host_name": "{{ selenium_config['intersecvm_sg_for_pub'].host_name }}"
+}
+
+# ---------------------------------------------------------------
+# FortiGateVM 5.4.1
+# ---------------------------------------------------------------
+NODE_FORTIGATEVM_541_CREATE_PARAMS = {
+    "apl_type": "1",
+    "type": "1",
+    "device_type": "5",
+    "subnet_info": SELECT_SUBNET_01,
+    "host_name": "{{ selenium_config['fortigatevm_541'].host_name }}",
+    "admin_id": "nalid",
+    "admin_pw": "nalpw",
+    "dns_server_primary": DNS_PRIMARY_IP,
+    "dns_server_secondary": DNS_SECONDARY_IP,
+    "ntp_server_primary": NTP_PRAMARY_IP,
+    "ntp_server_secondary": NTP_SECONDARY_IP
+}
+
+NODE_FORTIGATEVM_541_ADD_INTERFACE_PARAMS = {
+    "host_name": "{{ selenium_config['fortigatevm_541'].host_name }}",
+    "subnet_info": SELECT_SUBNET_02
+}
+
+NODE_FORTIGATEVM_541_ADD_V6_INTERFACE_PARAMS = {
+    "host_name": "{{ selenium_config['fortigatevm_541'].host_name }}",
+    "subnet_info": SELECT_SUBNET_V6_01,
+    "ip_v6_ext_auto_set_flg": "1",
+    "ip_v6_pub_auto_set_flg": "1"
+}
+if FORTIGATEVM_541_EXT_IPV6_ADDRESS != "":
+    NODE_FORTIGATEVM_541_ADD_V6_INTERFACE_PARAMS["ip_v6_ext_auto_set_flg"] = "0"
+    NODE_FORTIGATEVM_541_ADD_V6_INTERFACE_PARAMS["fixed_ip_v6_ext"] = FORTIGATEVM_541_EXT_IPV6_ADDRESS
+if FORTIGATEVM_541_PUB_IPV6_ADDRESS != "":
+    NODE_FORTIGATEVM_541_ADD_V6_INTERFACE_PARAMS["ip_v6_pub_auto_set_flg"] = "0"
+    NODE_FORTIGATEVM_541_ADD_V6_INTERFACE_PARAMS["fixed_ip_v6_pub"] = FORTIGATEVM_541_PUB_IPV6_ADDRESS
+
+NODE_FORTIGATEVM_541_DELETE_PARAMS = {
+    "host_name": "{{ selenium_config['fortigatevm_541'].host_name }}"
+}
+
+# ---------------------------------------------------------------
+# InterSecVM LB
+# ---------------------------------------------------------------
+NODE_INTERSECVM_LB_CREATE_PARAMS = {
+    "apl_type": "1",
+    "type": "2",
+    "device_type": "1",
+    "subnet_info": SELECT_SUBNET_01,
+    "host_name": "{{ selenium_config['intersecvm_lb'].host_name }}",
+    "fw_ip_address": "192.168.40.252",
+    "zabbix_vip_ip": ZABBIX_VIP_IP,
+    "zabbix_01_ip": ZABBIX_01_IP,
+    "zabbix_02_ip": ZABBIX_02_IP,
+    "ntp_server_primary": NTP_PRAMARY_IP
+}
+
+NODE_INTERSECVM_LB_ADD_V6_INTERFACE_PARAMS = {
+    "host_name": "{{ selenium_config['intersecvm_lb'].host_name }}",
+    "subnet_info": SELECT_SUBNET_V6_01,
+    "fw_ip_v6_address": ""
+}
+
+NODE_INTERSECVM_LB_DELETE_PARAMS = {
+    "host_name": "{{ selenium_config['intersecvm_lb'].host_name }}"
+}
+
+# ---------------------------------------------------------------
+# BIG-IP VE
+# ---------------------------------------------------------------
+NODE_BIGIP_VE_CREATE_PARAMS = {
+    "apl_type": "1",
+    "type": "2",
+    "device_type": "2",
+    "subnet_info": SELECT_SUBNET_01,
+    "host_name": "{{ selenium_config['bigipve'].host_name }}",
+    "admin_id": "nalid",
+    "admin_pw": "nalpw",
+    "fw_ip_address": "192.168.40.252",
+    "domain_name": "domain01",
+    "self_ip_name": "self01",
+    "timezone": "{{ selenium_config['bigipve'].timezone }}",
+    "dns_server_primary": DNS_PRIMARY_IP,
+    "dns_server_secondary": DNS_SECONDARY_IP,
+    "ntp_server_primary": NTP_PRAMARY_IP,
+    "ntp_server_secondary": NTP_SECONDARY_IP
+}
+
+NODE_BIGIP_VE_ADD_V6_INTERFACE_PARAMS = {
+    "host_name": "{{ selenium_config['bigipve'].host_name }}",
+    "subnet_info": SELECT_SUBNET_V6_01,
+    "fw_ip_v6_address": ""
+}
+
+NODE_BIGIP_VE_DELETE_PARAMS = {
+    "host_name": "{{ selenium_config['bigipve'].host_name }}"
+}
+
+# ---------------------------------------------------------------
+# vThunder(4.0.1)
+# ---------------------------------------------------------------
+NODE_VTHUNDER_CREATE_PARAMS = {
+    "apl_type": "1",
+    "type": "2",
+    "device_type": "3",
+    "subnet_info": SELECT_SUBNET_01,
+    "host_name": "{{ selenium_config['vthunder_401'].host_name }}",
+    "admin_id": "nalid",
+    "admin_pw": "nalpw",
+    "fw_ip_address": "192.168.40.252",
+    "dns_server_primary": DNS_PRIMARY_IP,
+    "dns_server_secondary": DNS_SECONDARY_IP,
+    "ntp_server_primary": NTP_PRAMARY_IP,
+    "ntp_server_secondary": NTP_SECONDARY_IP
+}
+
+NODE_VTHUNDER_ASSIGN_LICENSE_PARAMS = {
+    "host_name": "{{ selenium_config['vthunder_401'].host_name }}"
+}
+
+NODE_VTHUNDER_ADD_V6_INTERFACE_PARAMS = {
+    "host_name": "{{ selenium_config['vthunder_401'].host_name }}",
+    "subnet_info": SELECT_SUBNET_V6_01,
+    "fw_ip_v6_address": ""
+}
+
+NODE_VTHUNDER_DELETE_PARAMS = {
+    "host_name": "{{ selenium_config['vthunder_401'].host_name }}"
+}
+
+# ---------------------------------------------------------------
+# vThunder(4.1.1)
+# ---------------------------------------------------------------
+NODE_VTHUNDER_411_CREATE_PARAMS = {
+    "apl_type": "1",
+    "type": "2",
+    "device_type": "4",
+    "subnet_info": SELECT_SUBNET_01,
+    "host_name": "{{ selenium_config['vthunder_411'].host_name }}",
+    "admin_id": "nalid",
+    "admin_pw": "nalpw",
+    "fw_ip_address": "192.168.40.252",
+    "dns_server_primary": DNS_PRIMARY_IP,
+    "dns_server_secondary": DNS_SECONDARY_IP,
+    "ntp_server_primary": NTP_PRAMARY_IP,
+    "ntp_server_secondary": NTP_SECONDARY_IP
+}
+
+NODE_VTHUNDER_411_ASSIGN_LICENSE_PARAMS = {
+    "host_name": "{{ selenium_config['vthunder_411'].host_name }}"
+}
+
+NODE_VTHUNDER_411_ADD_V6_INTERFACE_PARAMS = {
+    "host_name": "{{ selenium_config['vthunder_411'].host_name }}",
+    "subnet_info": SELECT_SUBNET_V6_01,
+    "fw_ip_v6_address": ""
+}
+
+NODE_VTHUNDER_411_DELETE_PARAMS = {
+    "host_name": "{{ selenium_config['vthunder_411'].host_name }}"
+}
+
+# ---------------------------------------------------------------
+# Fortigate
+# ---------------------------------------------------------------
+NODE_FORTIGATE_PNF_CREATE_PARAMS = {
+    "apl_type": "2",
+    "type": "1",
+    "device_type": "1",
+    "subnet_info": SELECT_SUBNET_01,
+    "redundant_configuration_flg": REDUNDANT_CONF_FLG_02,
+    "vdom_name": "{{ selenium_config['fortigate'].vdom_name }}",
+    "admin_prof_name": "{{ selenium_config['fortigate'].admin_prof_name }}",
+    "user_account_id": "{{ selenium_config['fortigate'].user_account_id }}",
+    "account_password": "{{ selenium_config['fortigate'].account_password }}"
+}
+
+NODE_FORTIGATE_PNF_ADD_INTERFACE_PARAMS = {
+    "vdom_name": "{{ selenium_config['fortigate'].vdom_name }}",
+    "subnet_info": SELECT_SUBNET_02
+}
+
+NODE_FORTIGATE_PNF_ADD_V6_INTERFACE_PARAMS = {
+    "vdom_name": "{{ selenium_config['fortigate'].vdom_name }}",
+    "subnet_info": SELECT_SUBNET_V6_01,
+    "ip_v6_ext_auto_set_flg": "1",
+    "ip_v6_pub_auto_set_flg": "1"
+}
+if FORTIGATE_EXT_IPV6_ADDRESS != "":
+    NODE_FORTIGATE_PNF_ADD_V6_INTERFACE_PARAMS["ip_v6_ext_auto_set_flg"] = "0"
+    NODE_FORTIGATE_PNF_ADD_V6_INTERFACE_PARAMS["fixed_ip_v6_ext"] = FORTIGATE_EXT_IPV6_ADDRESS
+if FORTIGATE_PUB_IPV6_ADDRESS != "":
+    NODE_FORTIGATE_PNF_ADD_V6_INTERFACE_PARAMS["ip_v6_pub_auto_set_flg"] = "0"
+    NODE_FORTIGATE_PNF_ADD_V6_INTERFACE_PARAMS["fixed_ip_v6_pub"] = FORTIGATE_PUB_IPV6_ADDRESS
+
+NODE_FORTIGATE_PNF_DELETE_PARAMS = {
+    "vdom_name": "{{ selenium_config['fortigate'].vdom_name }}"
+}
+
+# ---------------------------------------------------------------
+# Fortigate Share
+# ---------------------------------------------------------------
+NODE_FORTIGATE_SHARE_PNF_CREATE_PARAMS = {
+    "apl_type": "2",
+    "type": "1",
+    "device_type": "3",
+    "subnet_info": SELECT_SUBNET_01,
+    "redundant_configuration_flg": REDUNDANT_CONF_FLG_02,
+    "vdom_name": "{{ selenium_config['fortigate_share'].vdom_name }}",
+    "admin_prof_name": "{{ selenium_config['fortigate_share'].admin_prof_name }}",
+    "user_account_id": "{{ selenium_config['fortigate_share'].user_account_id }}",
+    "account_password": "{{ selenium_config['fortigate_share'].account_password }}"
+}
+
+NODE_FORTIGATE_SHARE_PNF_ADD_INTERFACE_PARAMS = {
+    "vdom_name": "{{ selenium_config['fortigate_share'].vdom_name }}",
+    "subnet_info": SELECT_SUBNET_02
+}
+
+NODE_FORTIGATE_SHARE_PNF_ADD_V6_INTERFACE_PARAMS = {
+    "vdom_name": "{{ selenium_config['fortigate_share'].vdom_name }}",
+    "subnet_info": SELECT_SUBNET_V6_01,
+    "ip_v6_ext_auto_set_flg": "1",
+    "ip_v6_pub_auto_set_flg": "1"
+}
+if FORTIGATE_SHARE_EXT_IPV6_ADDRESS != "":
+    NODE_FORTIGATE_SHARE_PNF_ADD_V6_INTERFACE_PARAMS["ip_v6_ext_auto_set_flg"] = "0"
+    NODE_FORTIGATE_SHARE_PNF_ADD_V6_INTERFACE_PARAMS["fixed_ip_v6_ext"] = FORTIGATE_SHARE_EXT_IPV6_ADDRESS
+if FORTIGATE_SHARE_PUB_IPV6_ADDRESS != "":
+    NODE_FORTIGATE_SHARE_PNF_ADD_V6_INTERFACE_PARAMS["ip_v6_pub_auto_set_flg"] = "0"
+    NODE_FORTIGATE_SHARE_PNF_ADD_V6_INTERFACE_PARAMS["fixed_ip_v6_pub"] = FORTIGATE_SHARE_PUB_IPV6_ADDRESS
+
+NODE_FORTIGATE_SHARE_PNF_DELETE_PARAMS = {
+    "vdom_name": "{{ selenium_config['fortigate_share'].vdom_name }}"
+}
+
+# ---------------------------------------------------------------
+# Paloalto
+# ---------------------------------------------------------------
+NODE_PALOALTO_PNF_CREATE_PARAMS = {
+    "apl_type": "2",
+    "type": "1",
+    "device_type": "2",
+    "subnet_info": SELECT_SUBNET_01,
+    "redundant_configuration_flg": REDUNDANT_CONF_FLG_02,
+    "admin_id": "nalid",
+    "admin_pw": "nalpw",
+    "vsys_name": "{{ selenium_config['paloalto'].vsys_name }}",
+    "zone_name": "zone1"
+}
+
+NODE_PALOALTO_PNF_ADD_INTERFACE_PARAMS = {
+    "vsys_name": "{{ selenium_config['paloalto'].vsys_name }}",
+    "subnet_info": SELECT_SUBNET_02,
+    "zone_name": "zone1"
+}
+
+NODE_PALOALTO_PNF_ADD_V6_INTERFACE_PARAMS = {
+    "vsys_name": "{{ selenium_config['paloalto'].vsys_name }}",
+    "subnet_info": SELECT_SUBNET_V6_01,
+    "ip_v6_ext_auto_set_flg": "1",
+    "ip_v6_pub_auto_set_flg": "1"
+}
+if PALOALTO_EXT_IPV6_ADDRESS != "":
+    NODE_PALOALTO_PNF_ADD_V6_INTERFACE_PARAMS["ip_v6_ext_auto_set_flg"] = "0"
+    NODE_PALOALTO_PNF_ADD_V6_INTERFACE_PARAMS["fixed_ip_v6_ext"] = PALOALTO_EXT_IPV6_ADDRESS
+if PALOALTO_PUB_IPV6_ADDRESS != "":
+    NODE_PALOALTO_PNF_ADD_V6_INTERFACE_PARAMS["ip_v6_pub_auto_set_flg"] = "0"
+    NODE_PALOALTO_PNF_ADD_V6_INTERFACE_PARAMS["fixed_ip_v6_pub"] = PALOALTO_PUB_IPV6_ADDRESS
+
+NODE_PALOALTO_PNF_DELETE_PARAMS = {
+    "vsys_name": "{{ selenium_config['paloalto'].vsys_name }}"
+}
+
+# ---------------------------------------------------------------
+# Paloalto Share
+# ---------------------------------------------------------------
+NODE_PALOALTO_SHARE_PNF_CREATE_PARAMS = {
+    "apl_type": "2",
+    "type": "1",
+    "device_type": "4",
+    "subnet_info": SELECT_SUBNET_01,
+    "redundant_configuration_flg": REDUNDANT_CONF_FLG_02,
+    "admin_id": "nalid",
+    "admin_pw": "nalpw",
+    "vsys_name": "{{ selenium_config['paloalto_share'].vsys_name }}",
+    "zone_name": "zone1"
+}
+
+NODE_PALOALTO_SHARE_PNF_ADD_INTERFACE_PARAMS = {
+    "vsys_name": "{{ selenium_config['paloalto_share'].vsys_name }}",
+    "subnet_info": SELECT_SUBNET_02,
+    "zone_name": "zone1"
+}
+
+NODE_PALOALTO_SHARE_PNF_ADD_V6_INTERFACE_PARAMS = {
+    "vsys_name": "{{ selenium_config['paloalto_share'].vsys_name }}",
+    "subnet_info": SELECT_SUBNET_V6_01,
+    "ip_v6_ext_auto_set_flg": "1",
+    "ip_v6_pub_auto_set_flg": "1"
+}
+if PALOALTO_SHARE_EXT_IPV6_ADDRESS != "":
+    NODE_PALOALTO_SHARE_PNF_ADD_V6_INTERFACE_PARAMS["ip_v6_ext_auto_set_flg"] = "0"
+    NODE_PALOALTO_SHARE_PNF_ADD_V6_INTERFACE_PARAMS["fixed_ip_v6_ext"] = PALOALTO_SHARE_EXT_IPV6_ADDRESS
+if PALOALTO_SHARE_PUB_IPV6_ADDRESS != "":
+    NODE_PALOALTO_SHARE_PNF_ADD_V6_INTERFACE_PARAMS["ip_v6_pub_auto_set_flg"] = "0"
+    NODE_PALOALTO_SHARE_PNF_ADD_V6_INTERFACE_PARAMS["fixed_ip_v6_pub"] = PALOALTO_SHARE_PUB_IPV6_ADDRESS
+
+NODE_PALOALTO_SHARE_PNF_DELETE_PARAMS = {
+    "vsys_name": "{{ selenium_config['paloalto_share'].vsys_name }}"
+}
+
+# ---------------------------------------------------------------
+# BIG-IP
+# ---------------------------------------------------------------
+NODE_BIGIP_PNF_CREATE_PARAMS = {
+    "apl_type": "2",
+    "type": "2",
+    "device_type": "1",
+    "subnet_info": SELECT_SUBNET_01,
+    "redundant_configuration_flg": REDUNDANT_CONF_FLG_02,
+    "fw_ip_address": "",
+    "partition_id": "{{ selenium_config['bigip'].partition_id }}",
+    "route_domain_id": "{{ selenium_config['bigip'].route_domain_id }}",
+    "mng_user_account_id": "{{ selenium_config['bigip'].mng_user_account_id }}",
+    "mng_account_password": "{{ selenium_config['bigip'].mng_account_password }}",
+    "certificate_user_account_id": "{{ selenium_config['bigip'].certificate_user_account_id }}",
+    "certificate_account_password": "{{ selenium_config['bigip'].certificate_account_password }}"
+}
+
+NODE_BIGIP_PNF_ADD_V6_INTERFACE_PARAMS = {
+    "partition_id": "{{ selenium_config['bigip'].partition_id }}",
+    "subnet_info": SELECT_SUBNET_V6_01,
+    "fw_ip_v6_address": ""
+}
+
+NODE_BIGIP_PNF_DELETE_PARAMS = {
+    "partition_id": "{{ selenium_config['bigip'].partition_id }}"
+}
+
+# ---------------------------------------------------------------
+# BIG-IP Share
+# ---------------------------------------------------------------
+NODE_BIGIP_SHARE_PNF_CREATE_PARAMS = {
+    "apl_type": "2",
+    "type": "2",
+    "device_type": "3",
+    "subnet_info": SELECT_SUBNET_01,
+    "redundant_configuration_flg": REDUNDANT_CONF_FLG_02,
+    "fw_ip_address": "",
+    "partition_id": "{{ selenium_config['bigip_share'].partition_id }}",
+    "route_domain_id": "{{ selenium_config['bigip_share'].route_domain_id }}",
+    "mng_user_account_id": "{{ selenium_config['bigip_share'].mng_user_account_id }}",
+    "mng_account_password": "{{ selenium_config['bigip_share'].mng_account_password }}",
+    "certificate_user_account_id": "{{ selenium_config['bigip_share'].certificate_user_account_id }}",
+    "certificate_account_password": "{{ selenium_config['bigip_share'].certificate_account_password }}"
+}
+
+NODE_BIGIP_SHARE_PNF_ADD_V6_INTERFACE_PARAMS = {
+    "partition_id": "{{ selenium_config['bigip_share'].partition_id }}",
+    "subnet_info": SELECT_SUBNET_V6_01,
+    "fw_ip_v6_address": ""
+}
+
+NODE_BIGIP_SHARE_PNF_DELETE_PARAMS = {
+    "partition_id": "{{ selenium_config['bigip_share'].partition_id }}"
+}
+
+# ---------------------------------------------------------------
+# Thunder
+# ---------------------------------------------------------------
+NODE_THUNDER_PNF_CREATE_PARAMS = {
+    "apl_type": "2",
+    "type": "2",
+    "device_type": "2",
+    "subnet_info": SELECT_SUBNET_01,
+    "redundant_configuration_flg": REDUNDANT_CONF_FLG_02,
+    "fw_ip_address": "",
+    "partition_name": "{{ selenium_config['thunder'].partition_name }}",
+    "user_account_id": "{{ selenium_config['thunder'].user_account_id }}",
+    "account_password": "{{ selenium_config['thunder'].account_password }}"
+}
+
+NODE_THUNDER_PNF_ADD_V6_INTERFACE_PARAMS = {
+    "partition_name": "{{ selenium_config['thunder'].partition_name }}",
+    "subnet_info": SELECT_SUBNET_V6_01,
+    "fw_ip_v6_address": ""
+}
+
+NODE_THUNDER_PNF_DELETE_PARAMS = {
+    "partition_name": "{{ selenium_config['thunder'].partition_name }}"
+}
+
+# ---------------------------------------------------------------
+# Thunder Share
+# ---------------------------------------------------------------
+NODE_THUNDER_SHARE_PNF_CREATE_PARAMS = {
+    "apl_type": "2",
+    "type": "2",
+    "device_type": "4",
+    "subnet_info": SELECT_SUBNET_01,
+    "redundant_configuration_flg": REDUNDANT_CONF_FLG_02,
+    "fw_ip_address": "",
+    "partition_name": "{{ selenium_config['thunder_share'].partition_name }}",
+    "user_account_id": "{{ selenium_config['thunder_share'].user_account_id }}",
+    "account_password": "{{ selenium_config['thunder_share'].account_password }}"
+}
+
+NODE_THUNDER_SHARE_PNF_ADD_V6_INTERFACE_PARAMS = {
+    "partition_name": "{{ selenium_config['thunder_share'].partition_name }}",
+    "subnet_info": SELECT_SUBNET_V6_01,
+    "fw_ip_v6_address": ""
+}
+
+NODE_THUNDER_SHARE_PNF_DELETE_PARAMS = {
+    "partition_name": "{{ selenium_config['thunder_share'].partition_name }}"
+}
+
+# ---------------------------------------------------------------
+# CSR1000v
+# ---------------------------------------------------------------
+SERVICE_CISCO_L2_CREATE_PARAMS = {
+    "service_name": "{{ selenium_config['cisco_l2'].service_name }}",
+    "service_type": "2",
+    "subnet_info": SELECT_SUBNET_01,
+    "bandwidth": "10MB",
+    "dns_server_ip_address": "{{ selenium_config['cisco_l2'].dns_server_ip_address.create }}",
+    "ntp_server_ip_address": "{{ selenium_config['cisco_l2'].ntp_server_ip_address.create }}",
+    "snmp_server_ip_address": "{{ selenium_config['cisco_l2'].snmp_server_ip_address.create }}",
+    "syslog_server_ip_address": "{{ selenium_config['cisco_l2'].syslog_server_ip_address.create }}"
+}
+
+SERVICE_CISCO_L2_ADD_INTERFACE_PARAMS = {
+    "service_name": "{{ selenium_config['cisco_l2'].service_name }}",
+    "subnet_info": SELECT_SUBNET_02
+}
+
+SERVICE_CISCO_L2_ADD_V6_INTERFACE_PARAMS = {
+    "service_name": "{{ selenium_config['cisco_l2'].service_name }}",
+    "subnet_info": SELECT_SUBNET_V6_01,
+    "fw_ip_v6_address": ""
+}
+
+SERVICE_CISCO_L2_UPDATE_BANDWIDTH_PARAMS = {
+    "service_name": "{{ selenium_config['cisco_l2'].service_name }}",
+    "bandwidth": "50MB"
+}
+
+SERVICE_CISCO_L2_UPDATE_SETTING_PARAMS = {
+    "service_name": "{{ selenium_config['cisco_l2'].service_name }}",
+    "dns_server_ip_address": "{{ selenium_config['cisco_l2'].dns_server_ip_address.change }}",
+    "ntp_server_ip_address": "{{ selenium_config['cisco_l2'].ntp_server_ip_address.change }}",
+    "ntp_server_interface": SELECT_SUBNET_01,
+    "snmp_server_ip_address": "{{ selenium_config['cisco_l2'].snmp_server_ip_address.change }}",
+    "snmp_server_interface": SELECT_SUBNET_01,
+    "snmp_server_delete_flg": "",
+    "syslog_server_ip_address": "{{ selenium_config['cisco_l2'].syslog_server_ip_address.change }}",
+    "syslog_server_interface": SELECT_SUBNET_01,
+    "syslog_server_delete_flg": ""
+}
+
+SERVICE_CISCO_L2_DELETE_PARAMS = {
+    "service_name": "{{ selenium_config['cisco_l2'].service_name }}",
+}
+
+# ---------------------------------------------------------------
+# CSR1000v (Encrypted)
+# ---------------------------------------------------------------
+SERVICE_CISCO_L3_ENCRYPTED_CREATE_PARAMS = {
+    "service_name": "{{ selenium_config['cisco_l3_encrypted'].service_name }}",
+    "service_type": "3",
+    "subnet_info": SELECT_SUBNET_01,
+    "bandwidth": "10MB",
+    "dns_server_ip_address": "{{ selenium_config['cisco_l3_encrypted'].dns_server_ip_address.create }}",
+    "ntp_server_ip_address": "{{ selenium_config['cisco_l3_encrypted'].ntp_server_ip_address.create }}",
+    "snmp_server_ip_address": "{{ selenium_config['cisco_l3_encrypted'].snmp_server_ip_address.create }}",
+    "syslog_server_ip_address": "{{ selenium_config['cisco_l3_encrypted'].syslog_server_ip_address.create }}"
+}
+
+SERVICE_CISCO_L3_ENCRYPTED_ADD_INTERFACE_PARAMS = {
+    "service_name": "{{ selenium_config['cisco_l3_encrypted'].service_name }}",
+    "subnet_info": SELECT_SUBNET_02
+}
+
+SERVICE_CISCO_L3_ENCRYPTED_ADD_V6_INTERFACE_PARAMS = {
+    "service_name": "{{ selenium_config['cisco_l3_encrypted'].service_name }}",
+    "subnet_info": SELECT_SUBNET_V6_01,
+    "fw_ip_v6_address": ""
+}
+
+SERVICE_CISCO_L3_ENCRYPTED_UPDATE_BANDWIDTH_PARAMS = {
+    "service_name": "{{ selenium_config['cisco_l3_encrypted'].service_name }}",
+    "bandwidth": "50MB"
+}
+
+SERVICE_CISCO_L3_ENCRYPTED_UPDATE_SETTING_PARAMS = {
+    "service_name": "{{ selenium_config['cisco_l3_encrypted'].service_name }}",
+    "dns_server_ip_address": "{{ selenium_config['cisco_l3_encrypted'].dns_server_ip_address.change }}",
+    "ntp_server_ip_address": "{{ selenium_config['cisco_l3_encrypted'].ntp_server_ip_address.change }}",
+    "ntp_server_interface": SELECT_SUBNET_01,
+    "snmp_server_ip_address": "{{ selenium_config['cisco_l3_encrypted'].snmp_server_ip_address.change }}",
+    "snmp_server_interface": SELECT_SUBNET_01,
+    "snmp_server_delete_flg": "",
+    "syslog_server_ip_address": "{{ selenium_config['cisco_l3_encrypted'].syslog_server_ip_address.change }}",
+    "syslog_server_interface": SELECT_SUBNET_01,
+    "syslog_server_delete_flg": ""
+}
+
+SERVICE_CISCO_L3_ENCRYPTED_DELETE_PARAMS = {
+    "service_name": "{{ selenium_config['cisco_l3_encrypted'].service_name }}",
+}
+
+# ---------------------------------------------------------------
+# CSR1000v (Unencrypted)
+# ---------------------------------------------------------------
+SERVICE_CISCO_L3_PLAIN_CREATE_PARAMS = {
+    "service_name": "{{ selenium_config['cisco_l3_plain'].service_name }}",
+    "service_type": "4",
+    "subnet_info": SELECT_SUBNET_01,
+    "bandwidth": "10MB",
+    "dns_server_ip_address": "{{ selenium_config['cisco_l3_plain'].dns_server_ip_address.create }}",
+    "ntp_server_ip_address": "{{ selenium_config['cisco_l3_plain'].ntp_server_ip_address.create }}",
+    "snmp_server_ip_address": "{{ selenium_config['cisco_l3_plain'].snmp_server_ip_address.create }}",
+    "syslog_server_ip_address": "{{ selenium_config['cisco_l3_plain'].syslog_server_ip_address.create }}"
+}
+
+SERVICE_CISCO_L3_PLAIN_ADD_INTERFACE_PARAMS = {
+    "service_name": "{{ selenium_config['cisco_l3_plain'].service_name }}",
+    "subnet_info": SELECT_SUBNET_02
+}
+
+SERVICE_CISCO_L3_PLAIN_ADD_V6_INTERFACE_PARAMS = {
+    "service_name": "{{ selenium_config['cisco_l3_plain'].service_name }}",
+    "subnet_info": SELECT_SUBNET_V6_01,
+    "fw_ip_v6_address": ""
+}
+
+SERVICE_CISCO_L3_PLAIN_UPDATE_BANDWIDTH_PARAMS = {
+    "service_name": "{{ selenium_config['cisco_l3_plain'].service_name }}",
+    "bandwidth": "50MB"
+}
+
+SERVICE_CISCO_L3_PLAIN_UPDATE_SETTING_PARAMS = {
+    "service_name": "{{ selenium_config['cisco_l3_plain'].service_name }}",
+    "dns_server_ip_address": "{{ selenium_config['cisco_l3_plain'].dns_server_ip_address.change }}",
+    "ntp_server_ip_address": "{{ selenium_config['cisco_l3_plain'].ntp_server_ip_address.change }}",
+    "ntp_server_interface": SELECT_SUBNET_01,
+    "snmp_server_ip_address": "{{ selenium_config['cisco_l3_plain'].snmp_server_ip_address.change }}",
+    "snmp_server_interface": SELECT_SUBNET_01,
+    "snmp_server_delete_flg": "",
+    "syslog_server_ip_address": "{{ selenium_config['cisco_l3_plain'].syslog_server_ip_address.change }}",
+    "syslog_server_interface": SELECT_SUBNET_01,
+    "syslog_server_delete_flg": ""
+}
+
+SERVICE_CISCO_L3_PLAIN_DELETE_PARAMS = {
+    "service_name": "{{ selenium_config['cisco_l3_plain'].service_name }}",
+}
+
+# ---------------------------------------------------------------
+# CSR1000v Add Member
+# ---------------------------------------------------------------
+SERVICE_CISCO_ADD_MEMBER_PARAMS = {
+    "subnet_info": SELECT_SUBNET_01,
+    "fw_ip_address": ""
+}

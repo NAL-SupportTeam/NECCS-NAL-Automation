@@ -1,0 +1,25 @@
+---
+## Copy install-package
+##   This package file copied into temporary directory does not need delete.
+- name: Copy install-package
+  copy:
+    src: "{{ packages.pacemaker.archive }}"
+    dest: "{{ packages.work_path }}"
+
+## Register local repository
+##  yum -y localinstall <package>
+- name: Register pacemaker package
+  yum:
+    name: "{{ item.name }}"
+  with_items:
+    - name: "file://{{ packages.work_path }}/{{ packages.pacemaker.archive }}"
+
+##Install pacemaker
+- name: Install pacemaker
+  yum:
+    name: "{{ item.name }}"
+    state: "{{ item.state }}"
+  with_items:
+    - name: pacemaker-all
+      state: present
+

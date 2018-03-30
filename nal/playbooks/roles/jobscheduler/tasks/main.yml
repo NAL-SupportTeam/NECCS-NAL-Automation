@@ -1,0 +1,16 @@
+---
+- include: prepare_db.yml
+  when: job_type == 'jobscheduler'
+
+- include: prepare_app.yml
+  when: job_type == 'jobscheduler'
+
+- include: install.yml
+  when: job_type == 'jobscheduler'
+
+- include: service.yml
+  when: job_type == 'jobscheduler'
+
+- include: post_processing.yml
+  when: job_type == 'jobscheduler'
+

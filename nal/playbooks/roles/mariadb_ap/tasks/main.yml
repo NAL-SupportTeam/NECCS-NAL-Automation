@@ -1,0 +1,7 @@
+---
+- include: install.yml
+  when: job_type == 'jobscheduler'
+
+- include: move_db.yml
+  when: job_type == 'jobscheduler'
+

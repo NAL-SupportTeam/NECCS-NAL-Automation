@@ -1,0 +1,9 @@
+---
+- name: <LB> Check ping to web
+  shell: |
+    ping -c 1 {{ item }}
+  changed_when: false
+  with_items:
+    - "{{ nal.web.nodes[0].svmng_ip }}"
+    - "{{ nal.web.nodes[1].svmng_ip }}"
+

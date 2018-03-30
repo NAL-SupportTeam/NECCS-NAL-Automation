@@ -1,0 +1,17 @@
+{% if server_type == 'ap' %}
+/var/log/httpd/*log /var/log/nal/nal_api_trace.log /var/log/nal/nal_automation_trace.log /var/log/nal/nal_job_trace.log {
+{% endif %}
+{% if server_type == 'db' %}
+/var/log/httpd/*log /var/log/nal/nal_model_trace.log {
+{% endif %}
+    daily
+    rotate 31
+    compress
+    missingok
+    notifempty
+    sharedscripts
+    delaycompress
+    postrotate
+        /bin/systemctl reload httpd.service > /dev/null 2>/dev/null || true
+    endscript
+}

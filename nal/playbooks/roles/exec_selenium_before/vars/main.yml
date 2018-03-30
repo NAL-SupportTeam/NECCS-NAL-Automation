@@ -1,0 +1,5 @@
+---
+nal_test_home: /home/nal/function_tests/selenium_test
+evidence_dir: /home/nal/function_tests/selenium_test/evidence
+output_dir: /home/ansible/nal/log/ft
+

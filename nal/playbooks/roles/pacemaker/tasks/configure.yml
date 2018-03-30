@@ -1,0 +1,41 @@
+---
+- name: Create corosync config file
+  template:
+    src: corosync.conf.j2
+    dest: "{{ conf_file }}"
+  register: result_config
+
+- name: Copy config file to Standby ndoe for lb
+  shell: scp -p {{ conf_file }} root@{{ nal.lb.nodes[1].svmng_ip }}:{{ conf_root }}
+  when: server_type == "lb" # and result_config.changed
+
+- name: Copy config file to Standby ndoe for ap
+  shell: scp -p {{ conf_file }} root@{{ nal.ap.nodes[1].svmng_ip }}:{{ conf_root }}
+  when: server_type == "ap" # and result_config.changed
+
+- name: Copy config file to Standby ndoe for db
+  shell: scp -p {{ conf_file }} root@{{ nal.db.nodes[1].svmng_ip }}:{{ conf_root }}
+  when: server_type == "db" # and result_config.changed
+
+- name: Check existing auth key file
+  stat:
+    path: "{{ auth_file }}"
+  register: is_exists
+
+- name: Create auth key
+  command: corosync-keygen -l
+  register: result_keygen
+  when: is_exists.stat.md5 is not defined
+
+- name: Copy auth key file to Standby ndoe for lb
+  shell: scp {{ auth_file }} root@{{ nal.lb.nodes[1].svmng_ip }}:{{ conf_root }}
+  when: server_type == "lb" # and result_keygen.changed
+
+- name: Copy auth key file to Standby ndoe for ap
+  shell: scp {{ auth_file }} root@{{ nal.ap.nodes[1].svmng_ip }}:{{ conf_root }}
+  when: server_type == "ap" # and result_keygen.changed
+
+- name: Copy auth key file to Standby ndoe for db
+  shell: scp {{ auth_file }} root@{{ nal.db.nodes[1].svmng_ip }}:{{ conf_root }}
+  when: server_type == "db" #and result_keygen.changed
+

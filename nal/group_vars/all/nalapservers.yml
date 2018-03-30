@@ -1,0 +1,19 @@
+---
+server_type: ap
+
+firewall_allow_ports:
+  apache:
+    - 80/tcp
+
+firewall_allow_services:
+  pacemaker:
+    - high-availability
+
+job_user:
+  name: nsumsmgr
+  group: nsumsmgr
+  passwd: nal
+
+apache_user:
+  name: u_nal
+  passwd: nal@admin

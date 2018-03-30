@@ -1,0 +1,6 @@
+---
+- include: configure.yml
+
+- include: mod_wsgi.yml
+
+- include: service.yml

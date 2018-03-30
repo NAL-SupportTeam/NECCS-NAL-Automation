@@ -1,0 +1,96 @@
+---
+## Install nal-api
+- name: Unarchive nal-api archive file
+  unarchive:
+    src: "{{ archive_nal }}"
+    dest: "{{ install_dir }}"
+  args:
+    creates: "{{ conf_nal }}"
+  register: result_nal
+
+- name: Backup nal config file
+  command: cp -p {{ item }} {{ item }}.org
+  args:
+    creates: "{{ item }}.org"
+    removes: "{{ item }}"
+  with_items:
+    - "{{ conf_nal }}"
+  when: result_nal.changed
+
+## Install wim-api
+- name: Unarchive wim-api archive file
+  unarchive:
+    src: "{{ archive_wim }}"
+    dest: "{{ install_dir }}"
+  args:
+    creates: "{{ conf_wim }}"
+    keep_newer: yes
+  register: result_wim
+
+- name: Backup wim config file
+  command: cp -p {{ item }} {{ item }}.org
+  args:
+    creates: "{{ item }}.org"
+    removes: "{{ item }}"
+  with_items:
+    - "{{ conf_wim }}"
+  when: result_wim.changed
+
+- name: Change value of API_URL
+  lineinfile:
+    dest: "{{ item }}"
+    regexp: "const API_URL ="
+    line: "    const API_URL = 'http://{{ nal.db.fip.ip }}/';"
+  with_items:
+    - "{{ conf_nal }}"
+    - "{{ conf_wim }}"
+
+- name: Change value of WIM_API_URL
+  lineinfile:
+    dest: "{{ item }}"
+    regexp: "const WIM_API_URL ="
+    line: "    const WIM_API_URL = 'http://{{ wim.ap.wim_fip.ip }}/Wim/';"
+  with_items:
+    - "{{ conf_nal }}"
+    - "{{ conf_wim }}"
+
+- name: Change value of NAL_API_URL
+  lineinfile:
+    dest: "{{ item }}"
+    regexp: "const NAL_API_URL ="
+    line: "    const NAL_API_URL = 'http://{{ nal.ap.nodes[hostvars[inventory_hostname].index].dcmng_ip }}/Nal/';"
+  with_items:
+    - "{{ conf_nal }}"
+    - "{{ conf_wim }}"
+
+- name: Set job type for JobCenter
+  lineinfile:
+    dest: "{{ item }}"
+    regexp: "^ *'job_type' *=> *'[^1]'"
+    line: "        'job_type'       => '1',"
+    backrefs: yes
+  with_items:
+    - "{{ conf_nal }}"
+    - "{{ conf_wim }}"
+  when: job_type == 'jobcenter'
+
+- name: Set job type for JobScheduler
+  lineinfile:
+    dest: "{{ item }}"
+    regexp: "^ *'job_type' *=> *'[^2]'"
+    line: "        'job_type'       => '2',"
+    backrefs: yes
+  with_items:
+    - "{{ conf_nal }}"
+    - "{{ conf_wim }}"
+  when: job_type == 'jobscheduler'
+
+- name: Set DC name
+  lineinfile:
+    dest: "{{ item }}"
+    regexp: "^ *const *MY_DC_ID *= *'.*';"
+    line: "    const MY_DC_ID = '{{ dc_name }}';"
+  with_items:
+    - "{{ conf_nal }}"
+    - "{{ conf_wim }}"
+

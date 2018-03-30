@@ -1,0 +1,15 @@
+---
+
+server_type: lb
+
+firewall_allow_ports:
+  haproxy:
+    - 80/tcp
+
+firewall_allow_services:
+  pacemaker:
+    - high-availability
+
+mount:
+  path: /mnt/nas01
+  device: 

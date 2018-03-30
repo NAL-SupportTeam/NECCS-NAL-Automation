@@ -1,0 +1,37 @@
+---
+## Install pip & selenium
+- name: Delete work directory (pip & selenium)
+  file:
+    path: "{{ python_library_install_wk_dir }}"
+    state: "absent"
+
+- name: Create work directory (pip & selenium)
+  file:
+    path: "{{ python_library_install_wk_dir }}"
+    state: "directory"
+
+- name: Unarchive archive (get_pip)
+  unarchive:
+    src: "{{ get_pip_archive }}"
+    dest: "{{ python_library_install_wk_dir }}"
+
+- name: Unarchive archive (whell archive)
+  unarchive:
+    src: "{{ python_library_archive }}"
+    dest: "{{ python_library_install_wk_dir }}"
+
+- name: Install pip
+  command: python {{ get_pip }} --no-index --find-links={{ wheelhouse_dir }} pip
+  args:
+    chdir: "{{ python_library_install_wk_dir }}"
+
+- name: Install selenium
+  command: pip install --no-index --find-links={{ wheelhouse_dir }} selenium
+  args:
+    chdir: "{{ python_library_install_wk_dir }}"
+
+- name: Install selenium geckodriver
+  unarchive:
+    src: "{{ geckodriver_archive }}"
+    dest: "{{ usr_local_dir }}"
+

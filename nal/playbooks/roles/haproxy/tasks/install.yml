@@ -1,0 +1,58 @@
+---
+- name: Install Haproxy
+  yum:
+    name: "{{ item.name }}"
+    state: "{{ item.state }}"
+  with_items:
+    - name: haproxy
+      state: latest
+
+- name: Backup haproxy.cfg
+  command: |
+    cp -p
+    /etc/haproxy/haproxy.cfg
+    /etc/haproxy/haproxy.cfg.org
+  args:
+    creates: /etc/haproxy/haproxy.cfg.org
+    removes: /etc/haproxy/haproxy.cfg
+  register: result_backup
+
+- name: Create haproxy.cfg
+  template:
+    src: haproxy.cfg.j2
+    dest: /etc/haproxy/haproxy.cfg
+  when: result_backup.changed
+
+- name: Eesable and start Haproxy
+  service:
+    name: "{{ item.name }}"
+    state: "{{ item.state }}"
+    enabled: "{{ item.enabled }}"
+  with_items:
+    - name: haproxy
+      state: started
+      enabled: yes
+  when: is_redundancy != true and hostvars[inventory_hostname].is_first_active_node == "active"
+
+- name: Eesable and stop Haproxy
+  service:
+    name: "{{ item.name }}"
+    state: "{{ item.state }}"
+    enabled: "{{ item.enabled }}"
+  with_items:
+    - name: haproxy
+      state: stopped
+      enabled: yes
+  when: is_redundancy != true and hostvars[inventory_hostname].is_first_active_node != "active"
+
+- name: Desable and start Haproxy
+  service:
+    name: "{{ item.name }}"
+    state: "{{ item.state }}"
+    enabled: "{{ item.enabled }}"
+  with_items:
+    - name: haproxy
+      state: stopped
+      enabled: no
+  when: is_redundancy
+

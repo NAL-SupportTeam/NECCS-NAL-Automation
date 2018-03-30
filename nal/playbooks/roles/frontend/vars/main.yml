@@ -1,0 +1,15 @@
+---
+client_install_dir: /usr/lib/python2.7/site-packages/nalclient
+client_install_wk_dir: /tmp/nal-client
+client_archive: nal-client.tar.gz
+
+dashboard_archive: nal-dashboard.tar.gz
+dashboard_install_dir: /usr/share/openstack-dashboard
+
+config_nal_portal_dir: /usr/share/openstack-dashboard/nec_portal/local
+config_nal_portal_file: nal_portal_settings.py
+config_settings_dir: /usr/share/openstack-dashboard/openstack_dashboard
+config_settings_file: settings.py
+config_nal_policy_dir: /etc/openstack-dashboard
+config_nal_policy_file: nal_policy.json
+

@@ -1,0 +1,83 @@
+---
+- name: Backup httpd.conf
+  command: |
+    cp -p
+    /etc/httpd/conf/httpd.conf
+    /etc/httpd/conf/httpd.conf.org
+  args:
+    creates: /etc/httpd/conf/httpd.conf.org
+    removes: /etc/httpd/conf/httpd.conf
+  register: result
+
+- name: Create httpd.conf
+  template:
+    src: httpd.conf.j2
+    dest: /etc/httpd/conf/httpd.conf
+  when: result.changed
+
+- name: Set htpasswd for Frontend user
+  copy:
+    src: htpasswd
+    dest: /etc/httpd/conf/
+
+- name: Add job user
+  user:
+    name: "{{ job_user.name }}"
+    password: "{{ job_user.passwd }}"
+
+- name: Change owner/group of httpd log directory
+  file:
+    path: /var/log/httpd
+    state: directory
+    group: "{{ job_user.name }}"
+    owner: "{{ job_user.group }}"
+
+- name: Create root log directory for nal
+  file:
+    path: /var/log/nal
+    state: directory
+    group: "{{ job_user.name }}"
+    owner: "{{ job_user.group }}"
+
+- name: Create log directory for each job
+  file:
+    path: "{{ item }}"
+    state: directory
+    group: "{{ job_user.name }}"
+    owner: "{{ job_user.group }}"
+  with_items:
+    - /var/log/nal/job
+    - /var/log/nal/wimjob
+
+- name: Enesable and start Apache for web server
+  service:
+    name: "{{ item.name }}"
+    state: "{{ item.state }}"
+    enabled: "{{ item.enabled }}"
+  with_items:
+    - name: httpd
+      state: started
+      enabled: yes
+  when: is_redundancy != true and hostvars[inventory_hostname].is_first_active_node == "active"
+
+- name: Eesable and stop Apache for web server
+  service:
+    name: "{{ item.name }}"
+    state: "{{ item.state }}"
+    enabled: "{{ item.enabled }}"
+  with_items:
+    - name: httpd
+      state: stopped
+      enabled: yes
+  when: is_redundancy != true and hostvars[inventory_hostname].is_first_active_node != "active"
+
+- name: Desable and stop Apache for ap server
+  service:
+    name: "{{ item.name }}"
+    state: "{{ item.state }}"
+    enabled: "{{ item.enabled }}"
+  with_items:
+    - name: httpd
+      state: stopped
+      enabled: no
+  when: is_redundancy

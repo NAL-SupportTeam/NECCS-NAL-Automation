@@ -1,0 +1,3 @@
+---
+- include: resource.yml
+  when: is_redundancy and hostvars[inventory_hostname].is_first_active_node == "active"

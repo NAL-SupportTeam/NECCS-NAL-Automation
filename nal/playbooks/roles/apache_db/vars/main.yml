@@ -1,0 +1,6 @@
+---
+mod_wsgi:
+  archive: "{{ packages.mod_wsgi.archive }}"
+  work_dir: "{{ packages.work_path }}/{{ packages.mod_wsgi.dir }}"
+  work_dir2: "{{ packages.work_path }}/{{ packages.mod_wsgi.dir }}/{{ packages.mod_wsgi.dir2 }}"
+

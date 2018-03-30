@@ -1,0 +1,6 @@
+---
+- include: check_package_db.yml
+- include: check_service_db.yml
+- include: check_mount_db.yml
+- include: check_config_db.yml
+- include: check_clustere_db.yml

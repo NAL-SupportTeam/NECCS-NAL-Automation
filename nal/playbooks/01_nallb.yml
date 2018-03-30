@@ -1,0 +1,12 @@
+---
+- hosts : nallbservers
+  vars_files:
+    - ../group_vars/all/nallbservers.yml
+  become: yes
+  roles :
+    - selinux
+    - hosts
+    - haproxy
+    - pacemaker
+    - pacemaker_lb
+

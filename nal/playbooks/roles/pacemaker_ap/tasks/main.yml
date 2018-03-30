@@ -1,0 +1,7 @@
+---
+- include: prepare.yml
+  when: is_redundancy and job_type == 'jobscheduler' and hostvars[inventory_hostname].is_first_active_node == "active"
+
+- include: resource.yml
+  when: is_redundancy and job_type == 'jobscheduler' and hostvars[inventory_hostname].is_first_active_node == "active"
+

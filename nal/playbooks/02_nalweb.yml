@@ -1,0 +1,11 @@
+---
+- hosts : nalwebservers
+  vars_files:
+    - ../group_vars/all/nalwebservers.yml
+  become: yes
+  roles :
+    - selinux
+    - hosts
+    - apache
+    - apache_web
+

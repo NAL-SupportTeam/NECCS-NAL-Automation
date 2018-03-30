@@ -1,0 +1,39 @@
+---
+- name: Create service file
+  template:
+    src: jobscheduler.service.j2
+    dest: /usr/lib/systemd/system/jobscheduler.service
+
+- name: Eesable and start JobScheduler
+  service:
+    name: "{{ item.name }}"
+    state: "{{ item.state }}"
+    enabled: "{{ item.enabled }}"
+  with_items:
+    - name: jobscheduler
+      state: started
+      enabled: yes
+  when: is_redundancy != true and hostvars[inventory_hostname].is_first_active_node == "active"
+
+- name: Eesable and stop JobScheduler
+  service:
+    name: "{{ item.name }}"
+    state: "{{ item.state }}"
+    enabled: "{{ item.enabled }}"
+  with_items:
+    - name: jobscheduler
+      state: stopped
+      enabled: yes
+  when: is_redundancy != true and hostvars[inventory_hostname].is_first_active_node != "active"
+
+- name: Desable and start JobScheduler
+  service:
+    name: "{{ item.name }}"
+    state: "{{ item.state }}"
+    enabled: "{{ item.enabled }}"
+  with_items:
+    - name: jobscheduler
+      state: stopped
+      enabled: no
+  when: is_redundancy
+

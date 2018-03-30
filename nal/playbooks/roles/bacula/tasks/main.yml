@@ -1,0 +1,13 @@
+- name: Create directory for bacula
+  file:
+    path: /etc/bacula
+    state: directory
+
+- name: Create hosts file
+  template:
+    src: dump_mariadb.j2
+    dest: /etc/bacula/dump_mariadb
+    owner: root
+    group: root
+    mode: 0755
+

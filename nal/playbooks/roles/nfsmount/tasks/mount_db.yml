@@ -1,0 +1,34 @@
+---
+- name: Create mount point directory
+  file:
+    path: "{{ nal.db.nfs_mount.mountpoint }}"
+    state: directory
+
+- name: Check state of nfs mount
+  shell: mount -t nfs
+  register: result_mount
+  changed_when: false
+  ignore_errors: yes
+
+- name: Unmount nfs
+  mount:
+    name: "{{ item.mountpoint }}"
+    src: "{{ item.device }}"
+    fstype: nfs
+    state: unmounted
+  with_items:
+    - mountpoint: "{{ nal.db.nfs_mount.mountpoint }}"
+      device: "{{ nal.db.nfs_mount.nfs_server }}:{{ nal.db.nfs_mount.nfs_device }}"
+  when: result_mount.stdout != "" and hostvars[inventory_hostname].is_first_active_node != "active"
+
+- name: Mount nfs
+  mount:
+    name: "{{ item.mountpoint }}"
+    src: "{{ item.device }}"
+    fstype: nfs
+    state: mounted
+  with_items:
+    - mountpoint: "{{ nal.db.nfs_mount.mountpoint }}"
+      device: "{{ nal.db.nfs_mount.nfs_server }}:{{ nal.db.nfs_mount.nfs_device }}"
+  when: result_mount.stdout == "" and hostvars[inventory_hostname].is_first_active_node == "active"
+

@@ -1,0 +1,13 @@
+---
+- name: Desable and restart pacemaker/corosync
+  service:
+    name: "{{ item.name }}"
+    state: "{{ item.state }}"
+    enabled: "{{ item.enabled }}"
+  with_items:
+    - name: corosync
+      state: restarted
+      enabled: no
+    - name: pacemaker
+      state: restarted
+      enabled: no

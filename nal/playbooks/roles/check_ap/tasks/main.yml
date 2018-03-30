@@ -1,0 +1,13 @@
+---
+- include: check_node_ap.yml
+
+- include: check_package_ap.yml
+
+- include: check_mount_ap.yml
+
+- include: check_service_ap.yml
+
+- include: check_config_ap.yml
+
+- include: check_clustere_ap.yml
+  when: job_type == 'jobscheduler'

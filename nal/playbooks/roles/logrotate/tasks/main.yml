@@ -1,0 +1,17 @@
+---
+- name: Backup logrotate file for httpd
+  command: |
+    cp -p
+    /etc/logrotate.d/httpd
+    /tmp/httpd.org
+  args:
+    creates: /tmp/httpd.org
+    removes: /etc/logrotate.d/httpd
+  register: result
+
+- name: Create logrotate file for httpd
+  template:
+    src: httpd.j2
+    dest: /etc/logrotate.d/httpd
+  when: result.changed
+

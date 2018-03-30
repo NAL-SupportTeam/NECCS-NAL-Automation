@@ -1,0 +1,9 @@
+---
+- name: Install Pexpect
+  yum:
+    name: "{{ item.name }}"
+    state: "{{ item.state }}"
+  with_items:
+    - name: pexpect
+      state: latest
+

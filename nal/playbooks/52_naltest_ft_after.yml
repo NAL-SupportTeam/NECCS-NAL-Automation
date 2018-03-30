@@ -1,0 +1,6 @@
+---
+- hosts : seleniumservers
+  become: yes
+  roles :
+    - exec_selenium_after
+

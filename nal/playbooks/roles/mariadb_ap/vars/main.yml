@@ -1,0 +1,3 @@
+---
+mountpoint: "{{ nal.ap.nfs_mount.mountpoint }}"
+db_root: "{{ mountpoint }}/mysql"

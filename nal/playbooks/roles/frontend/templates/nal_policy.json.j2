@@ -1,0 +1,23 @@
+{
+    "nal_admin": "role:{{ frontend.keystone_role[dc_id].admin_role_name }}",
+    "nal_member": "role:{{ frontend.keystone_role[dc_id].admin_role_name }} or role:{{ frontend.keystone_role[dc_id].tenant_role_name }}",
+
+    "nal:show_node_admin": "rule:nal_admin",
+    "nal:show_node_project": "rule:nal_member",
+    "nal:update_node_interface": "rule:nal_member",
+    "nal:update_node_license": "rule:nal_member",
+    "nal:delete_node": "rule:nal_member",
+    "nal:create_node": "rule:nal_member",
+    "nal:delete_node_network": "rule:nal_member",
+    "nal:show_service_admin": "rule:nal_admin",
+    "nal:show_service_project": "rule:nal_member",
+    "nal:update_service_interface": "rule:nal_member",
+    "nal:update_service_member": "rule:nal_member",
+    "nal:delete_service": "rule:nal_member",
+    "nal:create_service": "rule:nal_member",
+    "nal:show_resource_admin": "rule:nal_admin",
+    "nal:show_resource_project": "rule:nal_member",
+    "nal:create_resource": "rule:nal_member",
+    "nal:update_resource": "rule:nal_member",
+    "nal:delete_resource": "rule:nal_member"
+}

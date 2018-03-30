@@ -1,0 +1,23 @@
+---
+python:
+  archive: "{{ packages.python3.archive }}"
+  root_dir: "/usr/local/{{ packages.python3.dir }}"
+  work_dir: "{{ packages.work_path }}/{{ packages.python3.dir }}"
+  work_dir2: "{{ packages.work_path }}/{{ packages.python3.dir }}/{{ packages.python3.dir2 }}"
+  python: "/usr/local/{{ packages.python3.dir }}/bin/{{ packages.python3.python }}"
+  slink_python3: /usr/bin/python3
+  pip: "/usr/local/{{ packages.python3.dir }}/bin/{{ packages.python3.pip }}"
+  slink_pip: /usr/bin/pip
+  lib: "/usr/local/{{ packages.python3.dir }}/lib/{{ packages.python3.lib }}"
+  slink_lib: "/lib64/{{ packages.python3.lib }}"
+
+suds_py3:
+  archive: "{{ packages.suds_py3.archive }}"
+  work_dir: "{{ packages.work_path }}/{{ packages.suds_py3.dir }}"
+  plugin_dir: "{{ packages.work_path }}/{{ packages.suds_py3.dir }}/{{ packages.suds_py3.dir2 }}"
+
+mysql_connector_python:
+  archive: "{{ packages.mysql_connector_python.archive }}"
+  work_dir: "{{ packages.work_path }}/{{ packages.mysql_connector_python.dir }}"
+  plugin_dir: "{{ packages.work_path }}/{{ packages.mysql_connector_python.dir }}/{{ packages.mysql_connector_python.dir2 }}"
+

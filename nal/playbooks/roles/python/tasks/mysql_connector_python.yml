@@ -1,0 +1,23 @@
+---
+## Prepare work directory for mysql-connector-python
+- name: Create work directory for mysql-connector-python
+  file:
+    path: "{{ mysql_connector_python.work_dir }}"
+    state: directory
+
+## Install mysql-connector-python
+- name: Unarchive mysql-connector-python archive file
+  unarchive:
+    src: "{{ mysql_connector_python.archive }}"
+    dest: "{{ mysql_connector_python.work_dir }}"
+  args:
+    creates: "{{ mysql_connector_python.plugin_dir }}"
+  register: result_unarchive
+
+## Setup mysql-connector-python to python
+- name: Setup mysql-connector-python to python
+  command: python3 setup.py install
+  args:
+    chdir: "{{ mysql_connector_python.plugin_dir }}"
+  when: result_unarchive.changed
+

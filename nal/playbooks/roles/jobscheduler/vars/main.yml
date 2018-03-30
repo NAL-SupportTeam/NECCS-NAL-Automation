@@ -1,0 +1,8 @@
+---
+jobscheduler:
+  archive: "{{ packages.jobscheduler.archive }}"
+  work_dir: "{{ packages.work_path }}/{{ packages.jobscheduler.dir }}"
+  work_dir2: "{{ packages.work_path }}/{{ packages.jobscheduler.dir }}/{{ packages.jobscheduler.dir2 }}"
+  install_param_file: "{{ packages.work_path }}/{{ packages.jobscheduler.dir }}/{{ packages.jobscheduler.dir2 }}/jobscheduler_install.xml"
+  app_dir: /opt/jobscheduler
+

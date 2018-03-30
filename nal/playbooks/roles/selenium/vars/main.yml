@@ -1,0 +1,16 @@
+---
+python_library_install_wk_dir: /tmp/python_wheel
+usr_local_dir: /usr/sbin
+nal_home_dir: /home/nal
+test_case_config_dir: /home/nal/function_tests/selenium_test/conf
+test_case_config_file: config.py
+evidence_dir: /home/nal/function_tests/selenium_test/evidence/
+
+get_pip_archive: get-pip.tar.gz
+python_library_archive: python_library.tar.gz
+geckodriver_archive: geckodriver-v0.14.0-linux64.tar.gz
+test_case_archive: selenium_test_case.tar.gz
+
+get_pip: get-pip.py
+wheelhouse_dir:  wheelhouse
+

@@ -1,0 +1,111 @@
+---
+## Install nal-client
+- name: Uninstall nal-client
+  file:
+    path: "{{ client_install_dir }}"
+    state: "absent"
+
+- name: Delete nal-client arcive files
+  file:
+    path: "{{ client_install_wk_dir }}"
+    state: "absent"
+
+- name: Create work directory for install nal-client
+  file:
+    path: "{{ client_install_wk_dir }}"
+    state: "directory"
+
+- name: Unarchive nal-client archive files
+  unarchive:
+    src: "{{ client_archive }}"
+    dest: "{{ client_install_wk_dir }}"
+
+- name: Get version of pbr
+  shell: pip list --format=columns | grep pbr | awk '{ print $2 }'
+  register: pbr_version
+
+- name: Install nal-client
+  command: python setup.py install
+  args:
+    chdir: "{{ client_install_wk_dir }}"
+  environment:
+    PBR_VERSION: "{{ pbr_version.stdout }}"
+
+## Install nal-dashboard
+- name: Unarchive nal-dashboard archive file
+  unarchive:
+    src: "{{ dashboard_archive }}"
+    dest: "{{ dashboard_install_dir }}"
+
+
+## Edit config file (nal_portal_settings.py)
+- name: Check exists config file (nal_portal_settings.py)
+  stat:
+    path: "{{ config_nal_portal_dir }}/{{ config_nal_portal_file }}"
+  register: check_exists_nal_portal_settings
+
+- name: Edit config file (Setting endpoint for nal-api)
+  lineinfile:
+    dest: "{{ config_nal_portal_dir }}/{{ config_nal_portal_file }}"
+    backrefs: yes
+    regexp: '^NAL_ENDPOINT\s*\=\s*.*$'
+    line: "NAL_ENDPOINT = 'http://{{ frontend.nal_api_endpoint[dc_id].nal_api_endpoint }}'"
+    state: present
+    create: no
+    backup: yes
+  when: check_exists_nal_portal_settings.stat.exists
+
+- name: Edit config file (Setting password for nal-api)
+  lineinfile:
+    dest: "{{ config_nal_portal_dir }}/{{ config_nal_portal_file }}"
+    backrefs: yes
+    regexp: '^NAL_ID_PASSWORD\s*\=\s*.*$'
+    line: "NAL_ID_PASSWORD = '{{ frontend.nal_api_user_id }}:{{ frontend.nal_api_password }}'"
+    state: present
+    create: no
+    backup: yes
+  when: check_exists_nal_portal_settings.stat.exists
+
+
+## Edit config file (settings.py)
+- name: Check exists config file (nal_portal_settings.py)
+  stat:
+    path: "{{ config_settings_dir }}/{{ config_settings_file }}"
+  register: check_exists_settings
+
+- name: Check exists nal_policy on config file (nal_portal_settings.py)
+  command: |
+    grep -e "'nal'\s*:\s*'nal_policy.json'\s*," {{ config_settings_dir }}/{{ config_settings_file }}
+  register: check_exists_str
+  failed_when: check_exists_str.rc not in [0, 1]
+  changed_when: False
+
+- name: Edit config file (nal_portal_settings.py)
+  lineinfile:
+    dest: "{{ config_settings_dir }}/{{ config_settings_file }}"
+    backrefs: yes
+    regexp: '(^POLICY\_FILES.*\{$)'
+    line: |
+      \1\n    'nal': 'nal_policy.json',
+    state: present
+    create: no
+    backup: yes
+  when: check_exists_str.rc == 1 and check_exists_settings.stat.exists
+
+
+## Edit config file (nal_policy.json)
+- name: Create work directory for install nal-client
+  file:
+    path: "{{ config_nal_policy_dir }}"
+    state: "directory"
+
+- name: Edit  config file (nal_policy.json)
+  template:
+    src: "nal_policy.json.j2"
+    dest: "{{ config_nal_policy_dir }}/{{ config_nal_policy_file }}"
+    owner: root
+    group: root
+    mode: 0644
+    force: yes
+    backup: yes
+

@@ -1,0 +1,43 @@
+---
+- name: Check value of no-quorum-policy
+  shell: crm configure show | grep 'no-quorum-policy=ignore'
+  register: result_no_quorum_policy
+  changed_when: false
+  ignore_errors: yes
+
+##- debug: var=result_no_quorum_policy
+
+- name: Set Property no-quorum-policy
+  command: crm configure property no-quorum-policy="ignore"
+  when: result_no_quorum_policy.stdout == ""
+
+- name: Check value of stonith-enabled
+  shell: crm configure show | grep 'stonith-enabled=false'
+  register: result_stonith_enabled
+  changed_when: false
+  ignore_errors: yes
+
+- name: Set Property stonith-enabled
+  command: crm configure property stonith-enabled="false"
+  when: result_stonith_enabled.stdout == ""
+
+- name: Check value of resource-stickiness
+  shell: crm configure show | grep 'resource-stickiness=INFINITY'
+  register: result_resource_stickiness
+  changed_when: false
+  ignore_errors: yes
+
+- name: Set ResourceDefault resource-stickiness
+  command: crm configure rsc_defaults resource-stickiness="INFINITY"
+  when: result_resource_stickiness.stdout == ""
+
+- name: Check value of migration-threshold
+  shell: crm configure show | grep 'migration-threshold=1'
+  register: result_migration_threshold
+  changed_when: false
+  ignore_errors: yes
+
+- name: Set ResourceDefault migration-threshold
+  command: crm configure rsc_defaults migration-threshold="1"
+  when: result_migration_threshold.stdout == ""
+

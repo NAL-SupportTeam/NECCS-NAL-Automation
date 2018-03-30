@@ -1,0 +1,19 @@
+---
+## nal_portal_settings.py
+- name: <FE> Check value of nal_portal_settings.py
+  shell: |
+    grep "{{ item.target}}" {{ item.file }}
+  changed_when: false
+  with_items:
+    - target: "^NAL_ENDPOINT\\s*=\\s*'http://{{ frontend.nal_api_endpoint[dc_id].nal_api_endpoint }}'"
+      file: /usr/share/openstack-dashboard/nec_portal/local/nal_portal_settings.py
+    - target: "^NAL_ID_PASSWORD\\s*=\\s*'{{ frontend.nal_api_user_id }}:{{ frontend.nal_api_password }}'"
+      file: /usr/share/openstack-dashboard/nec_portal/local/nal_portal_settings.py
+    - target: "    'nal': 'nal_policy.json',"
+      file: /usr/share/openstack-dashboard/openstack_dashboard/settings.py
+    - target: "    \\\"nal_admin\\\": \\\"role:{{ frontend.keystone_role[dc_id].admin_role_name }}\\\","
+      file: /etc/openstack-dashboard/nal_policy.json
+    - target: "    \\\"nal_member\\\": \\\"role:{{ frontend.keystone_role[dc_id].admin_role_name }} or role:{{ frontend.keystone_role[dc_id].tenant_role_name }}\\\","
+      file: /etc/openstack-dashboard/nal_policy.json
+
+

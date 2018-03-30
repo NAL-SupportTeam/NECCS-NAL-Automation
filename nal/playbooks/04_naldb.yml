@@ -1,0 +1,19 @@
+---
+- hosts : naldbservers
+  vars_files:
+    - ../group_vars/all/naldbservers.yml
+  become: yes
+  roles :
+    - selinux
+    - hosts
+    - nfsmount
+    - bacula
+    - python
+    - mariadb_db
+    - apache
+    - apache_db
+    - nal_model
+    - nal_initdb
+    - pacemaker
+    - pacemaker_db
+    - logrotate

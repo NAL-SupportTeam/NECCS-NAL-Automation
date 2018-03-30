@@ -1,0 +1,268 @@
+---
+job_type: jobscheduler
+is_redundancy: yes
+dc_id: 1
+dc_name: dc01
+cisco_service_type: ENV_NO_TUNNELING    ##ENV_NO_TUNNELING or ENV_TUNNRLING_ENCRYPTED or ENV_TUNNRLING_UNENCRYPTED
+
+frontend:
+  keystone_role:
+    -
+    - admin_role_name: O__DC1__Nal
+      tenant_role_name: O__DC1__Nal
+    - admin_role_name: O__DC2__Nal
+      tenant_role_name: O__DC2__Nal
+    - admin_role_name: O__DC3__Nal
+      tenant_role_name: O__DC3__Nal
+  nal_api_endpoint:
+    -
+    - nal_api_endpoint: 10.34.11.12
+    - nal_api_endpoint:
+    - nal_api_endpoint:
+  nal_api_user_id: u_nal
+  nal_api_password: nal@admin
+
+selenium:
+  portal_endpoint:
+    -
+    - base_url: 'https://10.34.5.42'
+      admin_base_url: 'https://10.34.5.42'
+    - base_url: 'https://10.169.5.11'
+      admin_base_url: 'https://10.169.5.11'
+    - base_url: 'https://10.3.5.7'
+      admin_base_url: 'https://10.3.5.7'
+  role_list:
+    -
+    - create_role_list: '["O__DC1__Nal", "T__DC1__Nal"]'
+      set_role_list: '["O__DC1__Nal", "T__DC1__Nal", "T__DC1__ProjectMember", "O__DC1__ContractManager", "admin"]'
+    - create_role_list: '["O__DC2__Nal", "T__DC2__Nal"]'
+      set_role_list: '["O__DC2__Nal", "T__DC2__Nal", "T__DC2__ProjectMember", "O__DC2__ContractManager", "admin"]'
+    - create_role_list: '["O__DC3__Nal", "T__DC3__Nal"]'
+      set_role_list: '["O__DC3__Nal", "T__DC3__Nal", "T__DC3__ProjectMember", "O__DC3__ContractManager", "admin"]'
+  user_id: admin
+  user_password: f4c6ad669c65c12e6701f2af04b6b2d598b21ed3
+  admin_user_id: admin
+  admin_user_password: f4c6ad669c65c12e6701f2af04b6b2d598b21ed3
+  nal_version: 4.1
+  func_name_list_before:
+    - node_intersecvm_sg_for_ext_create
+    - node_fortigatevm_create
+    - node_paloaltovm_create
+    - node_intersecvm_sg_for_pub_create
+    - node_fortigatevm_541_create
+    - node_intersecvm_lb_create
+    - node_bigip_ve_create
+    - node_vthunder_create
+    - node_vthunder_411_create
+    - node_fortigate_pnf_create
+    - node_fortigate_share_pnf_create
+    - node_paloalto_pnf_create
+    - node_paloalto_share_pnf_create
+    - node_bigip_pnf_create
+    - node_bigip_share_pnf_create
+    - node_thunder_pnf_create
+    - node_thunder_share_pnf_create
+    - "{% if cisco_service_type == 'ENV_NO_TUNNELING' %}service_cisco_l2_create{% elif cisco_service_type == 'ENV_TUNNRLING_ENCRYPTED' %}service_cisco_l3_encrypted_create{% else %}service_cisco_l3_plain_create{% endif %}"
+  func_name_list_after:
+    - resource_globalip_create
+    - resource_globalip_update
+    - resource_globalip_delete
+    - node_paloaltovm_assign_license
+    - node_vthunder_assign_license
+    - node_vthunder_411_assign_license
+    - node_intersecvm_sg_for_ext_add_interface
+    - node_intersecvm_sg_for_ext_add_v6_interface
+    - node_fortigatevm_add_interface
+    - node_fortigatevm_add_v6_interface
+    - node_paloaltovm_add_interface
+    - node_paloaltovm_add_v6_interface
+    - node_intersecvm_sg_for_pub_add_interface
+    - node_intersecvm_sg_for_pub_add_v6_interface
+    - node_fortigatevm_541_add_interface
+    - node_fortigatevm_541_add_v6_interface
+    - node_bigip_ve_add_v6_interface
+    - node_vthunder_add_v6_interface
+    - node_vthunder_411_add_v6_interface
+    - node_fortigate_pnf_add_interface
+    - node_fortigate_pnf_add_v6_interface
+    - node_fortigate_share_pnf_add_interface
+    - node_fortigate_share_pnf_add_v6_interface
+    - node_paloalto_pnf_add_interface
+    - node_paloalto_pnf_add_v6_interface
+    - node_paloalto_share_pnf_add_interface
+    - node_paloalto_share_pnf_add_v6_interface
+    - node_bigip_pnf_add_v6_interface
+    - node_bigip_share_pnf_add_v6_interface
+    - node_thunder_pnf_add_v6_interface
+    - node_thunder_share_pnf_add_v6_interface
+    - "{% if cisco_service_type == 'ENV_NO_TUNNELING' %}service_cisco_l2_add_interface{% elif cisco_service_type == 'ENV_TUNNRLING_ENCRYPTED' %}service_cisco_l3_encrypted_add_interface{% else %}service_cisco_l3_plain_add_interface{% endif %}"
+    - "{% if cisco_service_type == 'ENV_NO_TUNNELING' %}service_cisco_l2_add_v6_interface{% elif cisco_service_type == 'ENV_TUNNRLING_ENCRYPTED' %}service_cisco_l3_encrypted_add_v6_interface{% else %}service_cisco_l3_plain_add_v6_interface{% endif %}"
+    - "{% if cisco_service_type == 'ENV_NO_TUNNELING' %}service_cisco_l2_update_bandwidth{% elif cisco_service_type == 'ENV_TUNNRLING_ENCRYPTED' %}service_cisco_l3_encrypted_update_bandwidth{% else %}service_cisco_l3_plain_update_bandwidth{% endif %}"
+    - "{% if cisco_service_type == 'ENV_NO_TUNNELING' %}service_cisco_l3_plain_update_bandwidth{% elif cisco_service_type == 'ENV_TUNNRLING_ENCRYPTED' %}service_cisco_l3_encrypted_update_setting{% else %}service_cisco_l3_plain_update_setting{% endif %}"
+    - node_intersecvm_sg_for_ext_delete_interface
+    - node_intersecvm_sg_for_pub_delete_interface
+    - node_fortigate_pnf_delete_interface
+    - node_fortigate_share_pnf_delete_interface
+    - node_paloalto_pnf_delete_interface
+    - node_paloalto_share_pnf_delete_interface
+    - "{% if cisco_service_type == 'ENV_NO_TUNNELING' %}service_cisco_l2_delete{% elif cisco_service_type == 'ENV_TUNNRLING_ENCRYPTED' %}service_cisco_l3_encrypted_delete{% else %}service_cisco_l3_plain_delete{% endif %}"
+    - node_bigip_pnf_delete
+    - node_bigip_share_pnf_delete
+    - node_thunder_pnf_delete
+    - node_thunder_share_pnf_delete
+    - node_fortigate_pnf_delete
+    - node_fortigate_share_pnf_delete
+    - node_paloalto_pnf_delete
+    - node_paloalto_share_pnf_delete
+    - node_intersecvm_lb_delete
+    - node_bigip_ve_delete
+    - node_vthunder_delete
+    - node_vthunder_411_delete
+    - node_intersecvm_sg_for_ext_delete
+    - node_fortigatevm_delete
+    - node_paloaltovm_delete
+    - node_intersecvm_sg_for_pub_delete
+    - node_fortigatevm_541_delete
+
+nal:
+  lb:
+    nodes:
+      - name: za0lbrtg01
+        svmng_ip: 10.34.11.9
+        svint_ip: 10.37.11.9
+        heartbeat_ip: 10.40.11.9
+        storage_ip: 10.32.11.9
+        nodeid: 1
+      - name: za0lbrtg02
+        svmng_ip: 10.34.11.10
+        svint_ip: 10.37.11.10
+        heartbeat_ip: 10.40.11.10
+        storage_ip: 10.32.11.10
+        nodeid: 2
+    fip: ## SVmng
+      ip: 10.34.11.12
+      name: za0lbrtg
+      nic: eth0
+      prefix: 16
+  web:
+    nodes:
+      - name: za0wbrtg01
+        svmng_ip: 10.34.11.1
+        http_port: 80
+      - name: za0wbrtg02
+        svmng_ip: 10.34.11.2
+        http_port: 80
+  ap:
+    nodes:
+      - name: za0aprtg01
+        svmng_ip: 10.34.11.6
+        svint_ip:
+        heartbeat_ip: 10.40.11.6
+        storage_ip: 10.32.11.6
+        dcmng_ip: 10.39.11.6
+        nodeid: 1
+      - name: za0aprtg02
+        svmng_ip: 10.34.11.7
+        svint_ip:
+        heartbeat_ip: 10.40.11.7
+        storage_ip: 10.32.11.7
+        dcmng_ip: 10.39.11.7
+        nodeid: 2
+    fip: ## SVmng
+      ip: 10.34.11.8
+      name: za0aprtg
+      nic: eth0
+      prefix: 16
+    wim_fip: ## DCmng
+      ip: 10.39.11.8
+      nic: eth5
+      prefix: 16
+    nfs_mount:
+      mountpoint: /mnt/nas01
+      nfs_server: 10.32.10.206
+      nfs_device: /mnt/nas100_05
+  db:
+    nodes:
+      - name: za0dbrtg01
+        svmng_ip: 10.34.11.3
+        svint_ip: 10.37.11.3
+        heartbeat_ip: 10.40.11.3
+        storage_ip: 10.32.11.3
+        nodeid: 1
+      - name: za0dbrtg01
+        svmng_ip: 10.34.11.4
+        svint_ip: 10.37.11.4
+        heartbeat_ip: 10.40.11.4
+        storage_ip: 10.32.11.4
+        nodeid: 2
+    fip: ## SVmng
+      ip: 10.34.11.5
+      name: za0dbrtg
+      nic: eth0
+      prefix: 16
+    nfs_mount:
+      mountpoint: /mnt/nas01
+      nfs_server: 10.32.10.206
+      nfs_device: /mnt/nas300_01
+
+wim:
+  ap:
+    wim_fip:
+      ip: 10.39.11.8
+
+cluster:
+  group_name: group_nal
+  host_machine:
+    lb1:
+      svmng_ip: 10.34.10.14
+      storage_ip: 10.32.10.14
+    lb2:
+      svmng_ip: 10.34.10.15
+      storage_ip: 10.32.10.15
+    ap1:
+      svmng_ip: 10.34.10.14
+      storage_ip: 10.32.10.14
+    ap2:
+      svmng_ip: 10.34.10.15
+      storage_ip: 10.32.10.15
+    db1:
+      svmng_ip: 10.34.10.14
+      storage_ip: 10.32.10.14
+    db2:
+      svmng_ip: 10.34.10.15
+      storage_ip: 10.32.10.15
+  lb:
+    disk_root: /dev/mapper/rhel-root
+  ap:
+    disk_root: /dev/mapper/rhel-root
+  db:
+    disk_root: /dev/mapper/rhel-root
+
+packages:
+  pacemaker:
+    archive: pacemaker-repo-1.1.14-1.1.el7.x86_64.rpm
+  python3:
+    archive: Python-3.5.1.tgz
+    dir: python3.5.1
+    dir2: Python-3.5.1
+    python: python3.5
+    pip: pip3.5
+    lib: libpython3.5m.so.1.0
+  suds_py3:
+    archive: suds-py3-1.3.2.0.tar.gz
+    dir: suds_py3
+    dir2: suds-py3-1.3.2.0
+  mysql_connector_python:
+    archive: mysql-connector-python-2.0.4.zip
+    dir: mysql-connector-python
+    dir2: mysql-connector-python-2.0.4
+  mod_wsgi:
+    archive: mod_wsgi-4.4.23.tar.gz
+    dir: mod_wsgi
+    dir2: mod_wsgi-4.4.23
+  jobscheduler:
+    archive: jobscheduler_linux-x64.1.10.6.tar.gz
+    dir: jobscheduler
+    dir2: jobscheduler.1.10.6
+  work_path: /tmp
+

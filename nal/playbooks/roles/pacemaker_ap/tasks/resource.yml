@@ -1,0 +1,259 @@
+---
+## --------------------------------------------------------------------------
+- name: Check existing resource_fip_svmng (This task is for development)
+  command: crm configure show resource_fip_svmng
+  register: result_resource_fip_svmng
+  changed_when: false
+  ignore_errors: yes
+
+- name: Create fip resource for svmng
+  command: |
+    crm configure primitive resource_fip_svmng ocf:heartbeat:IPaddr2
+    params
+    ip="{{ nal.ap.fip.ip }}"
+    nic="{{ nal.ap.fip.nic }}"
+    cidr_netmask="{{ nal.ap.fip.prefix }}"
+    op start interval=0s timeout=180s
+    op stop interval=0s timeout=180s
+    op monitor interval=10s timeout=60s
+  when: result_resource_fip_svmng.rc == 1
+
+## --------------------------------------------------------------------------
+- name: Check existing resource_fip_dcmng (This task is for development)
+  command: crm configure show resource_fip_dcmng
+  register: result_resource_fip_dcmng
+  changed_when: false
+  ignore_errors: yes
+
+- name: Create fip resource for dcmng
+  command: |
+    crm configure primitive resource_fip_dcmng ocf:heartbeat:IPaddr2
+    params
+    ip="{{ nal.ap.wim_fip.ip }}"
+    nic="{{ nal.ap.wim_fip.nic }}"
+    cidr_netmask="{{ nal.ap.wim_fip.prefix }}"
+    op start interval=0s timeout=180s
+    op stop interval=0s timeout=180s
+    op monitor interval=10s timeout=60s
+  when: result_resource_fip_dcmng.rc == 1
+
+## --------------------------------------------------------------------------
+- name: Check existing resource_nas (This task is for development)
+  command: crm configure show resource_nas
+  register: result_resource_nas
+  changed_when: false
+  ignore_errors: yes
+
+- name: Create nas resource
+  command: |
+    crm configure primitive resource_nas ocf:heartbeat:Filesystem
+    params
+    device="{{ nal.ap.nfs_mount.nfs_server }}:{{ nal.ap.nfs_mount.nfs_device }}"
+    directory="{{ nal.ap.nfs_mount.mountpoint }}"
+    fstype=nfs
+    op start interval=0s timeout=180s
+    op stop interval=0s timeout=180s
+    op monitor interval=10s timeout=60s
+  when: result_resource_nas.rc == 1
+
+## --------------------------------------------------------------------------
+- name: Check existing resource_apache (This task is for development)
+  command: crm configure show resource_httpd
+  register: result_resource_apache
+  changed_when: false
+  ignore_errors: yes
+
+- name: Create apache resource
+  command: |
+    crm configure primitive resource_httpd ocf:heartbeat:apache
+    params
+    configfile="/etc/httpd/conf/httpd.conf"
+    op start interval=0s timeout=180s
+    op stop interval=0s timeout=180s
+    op monitor interval=60s timeout=60s
+  when: result_resource_apache.rc == 1
+
+## --------------------------------------------------------------------------
+- name: Check existing resource_db (This task is for development)
+  command: crm configure show resource_db
+  register: result_resource_db
+  changed_when: false
+  ignore_errors: yes
+
+- name: Create db resource
+  command: |
+    crm configure primitive resource_db ocf:heartbeat:mysql
+    params
+    binary="/usr/libexec/mysqld"
+    config="/etc/my.cnf"
+    datadir="/var/lib/mysql"
+    pid="/var/run/mariadb/mariadb.pid"
+    socket="/var/lib/mysql/mysql.sock"
+    user="mysql" group="mysql"
+    additional_parameters="--basedir=/usr --plugin-dir=/usr/lib64/mysql/plugin --log-error=/var/log/mariadb/mariadb.log"
+    op start interval=0s timeout=180s
+    op stop interval=0s timeout=180s
+    op monitor interval=10s timeout=60s
+  when: result_resource_db.rc == 1
+
+## --------------------------------------------------------------------------
+- name: Check existing resource_jobscheduler (This task is for development)
+  command: crm configure show resource_jobscheduler
+  register: result_resource_jobscheduler
+  changed_when: false
+  ignore_errors: yes
+
+- name: Create jobscheduler resource
+  command: |
+    crm configure primitive resource_jobscheduler systemd:jobscheduler
+    op start interval=0s timeout=180s
+    op stop interval=0s timeout=180s
+    op monitor interval=10s timeout=100s
+  when: result_resource_jobscheduler.rc == 1
+
+## --------------------------------------------------------------------------
+- name: Check existing group (This task is for development)
+  command: crm configure show {{ cluster.group_name }}
+  register: result_group
+  changed_when: false
+  ignore_errors: yes
+
+- name: Create cluster gourp
+  command: |
+    crm configure group {{ cluster.group_name }}
+    resource_fip_svmng
+    resource_fip_dcmng
+    resource_nas
+    resource_httpd
+    resource_db
+    resource_jobscheduler
+  when: result_group.rc == 1
+
+## --------------------------------------------------------------------------
+- name: Check existing disk check resource (This task is for development)
+  command: crm configure show resource_check_disk_root
+  register: result_resource_check_disk_root
+  changed_when: false
+  ignore_errors: yes
+
+- name: Create disk check resource
+  command: |
+    crm configure primitive resource_check_disk_root ocf:pacemaker:diskd
+    params
+    device={{ cluster.ap.disk_root }}
+    name="status_disk_root"
+    op start interval=0s timeout=180s
+    op stop interval=0s timeout=180s
+    op monitor interval=10s timeout=60s
+  when: result_resource_check_disk_root.rc == 1
+
+## --------------------------------------------------------------------------
+- name: Check existing clone for disk check resource (This task is for development)
+  command: crm configure show clone_check_disk_root
+  register: result_clone_check_disk_root
+  changed_when: false
+  ignore_errors: yes
+
+- name: Create clone for disk check resource
+  command: crm configure clone clone_check_disk_root resource_check_disk_root
+  when: result_clone_check_disk_root.rc == 1
+
+## --------------------------------------------------------------------------
+- name: Check existing location for disk check resource (This task is for development)
+  command: crm configure show location_check_disk_root
+  register: result_location_check_disk_root
+  changed_when: false
+  ignore_errors: yes
+
+- name: Create location for check disk root
+  command: |
+    crm configure location location_check_disk_root {{ cluster.group_name }}
+    rule -inf: not_defined status_disk_root or status_disk_root eq ERROR
+  when: result_location_check_disk_root.rc == 1
+
+## --------------------------------------------------------------------------
+- name: Check existing ping svmng check resource (This task is for development)
+  command: crm configure show resource_check_ping_svmng
+  register: result_resource_check_ping_svmng
+  changed_when: false
+  ignore_errors: yes
+
+- name: Create check ping svmng resource
+  command: |
+    crm configure primitive resource_check_ping_svmng ocf:pacemaker:ping
+    params
+    host_list="{{ cluster.host_machine.ap1.svmng_ip }} {{ cluster.host_machine.ap2.svmng_ip }}"
+    name="status_ping_svmng"
+    multiplier="100"
+    op start interval=0s timeout=180s
+    op stop interval=0s timeout=180s
+    op monitor interval=10s timeout=60s
+  when: result_resource_check_ping_svmng.rc == 1
+
+## --------------------------------------------------------------------------
+- name: Check existing clone for ping svmng check resource (This task is for development)
+  command: crm configure show clone_check_ping_svmng
+  register: result_clone_check_ping_svmng
+  changed_when: false
+  ignore_errors: yes
+
+- name: Create clone for check ping svmng resource
+  command: crm configure clone clone_check_ping_svmng resource_check_ping_svmng
+  when: result_clone_check_ping_svmng.rc == 1
+
+## --------------------------------------------------------------------------
+- name: Check existing location for ping svmng check resource (This task is for development)
+  command: crm configure show location_check_ping_svmng
+  register: result_location_check_ping_svmng
+  changed_when: false
+  ignore_errors: yes
+
+- name: Create location for check ping svmng
+  command: |
+    crm configure location location_check_ping_svmng {{ cluster.group_name }}
+    rule -inf: not_defined status_ping_svmng or status_ping_svmng lt 100
+  when: result_location_check_ping_svmng.rc == 1
+
+## --------------------------------------------------------------------------
+- name: Check existing ping storage check resource (This task is for development)
+  command: crm configure show resource_check_ping_storage
+  register: result_resource_check_ping_storage
+  changed_when: false
+  ignore_errors: yes
+
+- name: Create check ping storage resoruce
+  command: |
+    crm configure primitive resource_check_ping_storage ocf:pacemaker:ping
+    params
+    host_list="{{ cluster.host_machine.ap1.storage_ip }} {{ cluster.host_machine.ap2.storage_ip }}"
+    name="status_ping_storage"
+    multiplier="100"
+    op start interval=0s timeout=180s
+    op stop interval=0s timeout=180s
+    op monitor interval=10s timeout=60s
+  when: result_resource_check_ping_storage.rc == 1
+
+## --------------------------------------------------------------------------
+- name: Check existing clone for ping storage check resource (This task is for development)
+  command: crm configure show clone_check_ping_storage
+  register: result_clone_check_ping_storage
+  changed_when: false
+  ignore_errors: yes
+
+- name: Create clone for check ping storage resoruce
+  command: crm configure clone clone_check_ping_storage resource_check_ping_storage
+  when: result_clone_check_ping_storage.rc == 1
+
+## --------------------------------------------------------------------------
+- name: Check existing location for ping storage check resource (This task is for development)
+  command: crm configure show location_check_ping_storage
+  register: result_location_check_ping_storage
+  changed_when: false
+  ignore_errors: yes
+
+- name: Create location for check ping storage
+  command: |
+    crm configure location location_check_ping_storage {{ cluster.group_name }}
+    rule -inf: not_defined status_ping_storage or status_ping_storage lt 100
+  when: result_location_check_ping_storage.rc == 1
+

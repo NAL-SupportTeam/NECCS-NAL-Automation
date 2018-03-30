@@ -1,0 +1,5 @@
+---
+- include: check_node_web.yml
+- include: check_package_web.yml
+- include: check_service_web.yml
+- include: check_config_web.yml

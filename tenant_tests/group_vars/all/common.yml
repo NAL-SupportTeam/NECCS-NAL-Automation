@@ -1,0 +1,425 @@
+---
+job_type: jobscheduler
+is_redundancy: yes
+dc_id: 1
+dc_name: dc01
+cisco_service_type: ENV_NO_TUNNELING    ##ENV_NO_TUNNELING or ENV_TUNNRLING_ENCRYPTED or ENV_TUNNRLING_UNENCRYPTED
+
+frontend:
+  keystone_role:
+    -
+    - admin_role_name: O__DC1__Nal
+      tenant_role_name: O__DC1__Nal
+    - admin_role_name: O__DC2__Nal
+      tenant_role_name: O__DC2__Nal
+    - admin_role_name: O__DC3__Nal
+      tenant_role_name: O__DC3__Nal
+  nal_api_endpoint:
+    -
+    - nal_api_endpoint: 10.34.11.12
+    - nal_api_endpoint:
+    - nal_api_endpoint:
+  nal_api_user_id: u_nal
+  nal_api_password: nal@admin
+
+selenium:
+  portal_endpoint:
+    -
+    - base_url: 'https://10.34.5.42'
+    - base_url: 'https://10.169.5.11'
+    - base_url: 'https://10.3.5.7'
+  user_id: admin
+  user_password: f4c6ad669c65c12e6701f2af04b6b2d598b21ed3
+  nal_version: 4.1
+  func_name_tenant_test:
+    tenant_create:
+      - tenant1_tenant_create
+      - tenant2_tenant_create
+      - tenant3_tenant_create
+      - tenant4_tenant_create
+      - tenant5_tenant_create
+    fw_create:
+      - tenant1_fw_create
+      - tenant2_fw_create
+      - tenant3_fw_create
+      - tenant4_fw_create
+      - tenant5_fw_create
+    fw_update:
+      - tenant1_fw_update
+      - tenant2_fw_update
+      - tenant3_fw_update
+      - tenant4_fw_update
+      - tenant5_fw_update
+    lb_create:
+      - tenant1_lb_create
+      - tenant2_lb_create
+      - tenant3_lb_create
+      - tenant4_lb_create
+      - tenant5_lb_create
+    lb_update:
+      - tenant1_lb_update
+      - tenant2_lb_update
+      - tenant4_lb_update
+      - tenant5_lb_update
+    ce_create:
+      - tenant1_ce_create
+    ce_update:
+      - tenant1_ce_update
+    node_delete:
+      - tenant1_node_delete
+      - tenant2_node_delete
+      - tenant3_node_delete
+      - tenant4_node_delete
+      - tenant5_node_delete
+
+test_pattern:
+  tenant1_tenant_create:
+    config_set: tenant1
+    selenium_func_name:
+      - provisioning_for_auto_test
+  tenant1_fw_create:
+    config_set: tenant1
+    selenium_func_name:
+      - node_paloaltovm_create
+  tenant1_lb_create:
+    config_set: tenant1
+    selenium_func_name:
+      - node_bigip_ve_create
+  tenant1_ce_create:
+    config_set: tenant1
+    selenium_func_name:
+      - service_cisco_l3_encrypted_create
+  tenant1_fw_update:
+    config_set: tenant1
+    selenium_func_name:
+      - node_paloaltovm_assign_license
+      - node_paloaltovm_add_v6_interface
+  tenant1_lb_update:
+    config_set: tenant1
+    selenium_func_name:
+      - node_bigip_ve_add_v6_interface
+  tenant1_ce_update:
+    config_set: tenant1
+    selenium_func_name:
+      - service_cisco_l3_encrypted_add_v6_interface
+  tenant1_node_delete:
+    config_set: tenant1
+    selenium_func_name:
+      - service_cisco_l3_encrypted_delete
+      - node_bigip_ve_delete
+      - node_paloaltovm_delete
+
+  tenant2_tenant_create:
+    config_set: tenant2
+    selenium_func_name:
+      - provisioning_for_auto_test
+  tenant2_fw_create:
+    config_set: tenant2
+    selenium_func_name:
+      - node_fortigatevm_541_create
+  tenant2_lb_create:
+    config_set: tenant2
+    selenium_func_name:
+      - node_vthunder_411_create
+  tenant2_fw_update:
+    config_set: tenant2
+    selenium_func_name:
+      - node_fortigatevm_541_add_v6_interface
+  tenant2_lb_update:
+    config_set: tenant2
+    selenium_func_name:
+      - node_vthunder_411_assign_license
+      - node_vthunder_411_add_v6_interface
+  tenant2_node_delete:
+    config_set: tenant2
+    selenium_func_name:
+      - node_vthunder_411_delete
+      - node_fortigatevm_541_delete
+
+  tenant3_tenant_create:
+    config_set: tenant3
+    selenium_func_name:
+      - provisioning_for_auto_test
+  tenant3_fw_create:
+    config_set: tenant3
+    selenium_func_name:
+      - node_intersecvm_sg_for_ext_create
+      - node_intersecvm_sg_for_pub_create
+  tenant3_lb_create:
+    config_set: tenant3
+    selenium_func_name:
+      - node_intersecvm_lb_create
+  tenant3_fw_update:
+    config_set: tenant3
+    selenium_func_name:
+      - node_intersecvm_sg_for_ext_add_v6_interface
+      - node_intersecvm_sg_for_pub_add_v6_interface
+  tenant3_lb_update:
+    config_set: tenant3
+    selenium_func_name:
+      - node_intersecvm_lb_add_v6_interface
+  tenant3_node_delete:
+    config_set: tenant3
+    selenium_func_name:
+      - node_intersecvm_lb_delete
+      - node_intersecvm_sg_for_pub_delete
+      - node_intersecvm_sg_for_ext_delete
+
+  tenant4_tenant_create:
+    config_set: tenant4
+    selenium_func_name:
+      - provisioning_for_auto_test
+  tenant4_fw_create:
+    config_set: tenant4
+    selenium_func_name:
+      - node_fortigate_share_pnf_create
+  tenant4_lb_create:
+    config_set: tenant4
+    selenium_func_name:
+      - node_bigip_share_pnf_create
+  tenant4_fw_update:
+    config_set: tenant4
+    selenium_func_name:
+      - node_fortigate_share_pnf_add_v6_interface
+  tenant4_lb_update:
+    config_set: tenant4
+    selenium_func_name:
+      - node_bigip_share_pnf_add_v6_interface
+  tenant4_node_delete:
+    config_set: tenant4
+    selenium_func_name:
+      - node_bigip_share_pnf_delete
+      - node_fortigate_share_pnf_delete
+
+  tenant5_tenant_create:
+    config_set: tenant5
+    selenium_func_name:
+      - provisioning_for_auto_test
+  tenant5_fw_create:
+    config_set: tenant5
+    selenium_func_name:
+      - node_paloalto_share_pnf_create
+  tenant5_lb_create:
+    config_set: tenant5
+    selenium_func_name:
+      - node_thunder_share_pnf_create
+  tenant5_fw_update:
+    config_set: tenant5
+    selenium_func_name:
+      - node_paloalto_share_pnf_add_v6_interface
+  tenant5_lb_update:
+    config_set: tenant5
+    selenium_func_name:
+      - node_thunder_share_pnf_add_v6_interface
+  tenant5_node_delete:
+    config_set: tenant5
+    selenium_func_name:
+      - node_thunder_share_pnf_delete
+      - node_paloalto_share_pnf_delete
+
+# Please set IPv6 address for each device type of firewall.
+# If not set, the key name is unnecessary.
+# The key names that can be set are as follows.
+#   INTERSEC_EXT_IPV6_ADDRESS
+#   FORTIGATEVM_524_EXT_IPV6_ADDRESS
+#   FORTIGATEVM_524_PUB_IPV6_ADDRESS
+#   PALOALTOVM_EXT_IPV6_ADDRESS
+#   PALOALTOVM_PUB_IPV6_ADDRESS
+#   INTERSECVM_PUB_IPV6_ADDRESS
+#   FORTIGATEVM_541_EXT_IPV6_ADDRESS
+#   FORTIGATEVM_541_PUB_IPV6_ADDRESS
+#   FORTIGATE_EXT_IPV6_ADDRESS
+#   FORTIGATE_PUB_IPV6_ADDRESS
+#   FORTIGATE_SHARE_EXT_IPV6_ADDRESS
+#   FORTIGATE_SHARE_PUB_IPV6_ADDRESS
+#   PALOALTO_EXT_IPV6_ADDRESS
+#   PALOALTO_PUB_IPV6_ADDRESS
+#   PALOALTO_SHARE_EXT_IPV6_ADDRESS
+#   PALOALTO_SHARE_PUB_IPV6_ADDRESS
+setting_tenant_params:
+    tenant1:
+      tenant_name: ft_tenant1
+      user_name: ft_user1
+      user_password: password
+      network_address_v4: '10.58.71.0/24'
+      network_address_v6: '1234::5670/124'
+      ipv6_address:
+        - set_name: PALOALTOVM_EXT_IPV6_ADDRESS
+          set_value: ''
+        - set_name: PALOALTOVM_PUB_IPV6_ADDRESS
+          set_value: ''
+      webclient_ip: ''
+    tenant2:
+      tenant_name: ft_tenant2
+      user_name: ft_user2
+      user_password: password
+      network_address_v4: '10.58.71.0/24'
+      network_address_v6: '1234::5670/124'
+      ipv6_address:
+        - set_name: FORTIGATEVM_524_EXT_IPV6_ADDRESS
+          set_value: ''
+        - set_name: FORTIGATEVM_524_EXT_IPV6_ADDRESS
+          set_value: ''
+      webclient_ip: ''
+    tenant3:
+      tenant_name: ft_tenant3
+      user_name: ft_user3
+      user_password: password
+      network_address_v4: '10.58.71.0/24'
+      network_address_v6: '1234::5670/124'
+      ipv6_address:
+        - set_name: INTERSEC_EXT_IPV6_ADDRESS
+          set_value: ''
+        - set_name: INTERSEC_PUB_IPV6_ADDRESS
+          set_value: ''
+      webclient_ip: ''
+    tenant4:
+      tenant_name: ft_tenant4
+      user_name: ft_user4
+      user_password: password
+      network_address_v4: '10.58.71.0/24'
+      network_address_v6: '1234::5670/124'
+      ipv6_address:
+        - set_name: PALOALTO_SHARE_EXT_IPV6_ADDRESS
+          set_value: ''
+        - set_name: PALOALTO_SHARE_PUB_IPV6_ADDRESS
+          set_value: ''
+      webclient_ip: ''
+    tenant5:
+      tenant_name: ft_tenant5
+      user_name: ft_user5
+      user_password: password
+      network_address_v4: '10.58.71.0/24'
+      network_address_v6: '1234::5670/124'
+      ipv6_address:
+        - set_name: FORTIGATE_SHARE_EXT_IPV6_ADDRESS
+          set_value: ''
+        - set_name: FORTIGATE_SHARE_PUB_IPV6_ADDRESS
+          set_value: ''
+      webclient_ip: ''
+
+selenium_config:
+  common:
+      base_url: 'http://10.58.70.107'
+      base_url_global: 'http://10.58.79.171'
+      login_user_name: test_user
+      login_user_password: password
+      login_project_name: nal_auto_test
+      admin_user_name: admin
+      admin_user_password: admin
+      admin_project_name: admin
+      zabbix_vip_ip: ''
+      zabbix_01_ip: ''
+      zabbix_02_ip: ''
+      dns_primary_ip: ''
+      dns_secondary_ip: ''
+      ntp_pramary_ip: ''
+      ntp_secondary_ip: ''
+      network_name_01: nal_check_infra_net01
+      subnet_name_01: nal_check_infra_sub01
+      network_address_01: '10.58.71.0/24'
+      network_name_02: nal_check_infra_net02
+      subnet_name_02: nal_check_infra_sub02
+      network_address_02: '10.58.72.0/24'
+      subnet_name_03: nal_check_infra_sub03
+      network_address_03: '1234::5670/124'
+      create_role_list: ["O__DC2__Nal", "T__DC2__Nal"]
+      set_role_list: ["O__DC2__Nal", "T__DC2__Nal", "T__DC2__ProjectMember", "O__DC2__ContractManager", "admin"]
+      admin_role_list: ["T__DC2__ProjectMember", "O__DC2__ContractManager", "admin"]
+  intersecvm_sg_for_ext:
+      host_name: testInterExt
+  intersecvm_sg_for_pub:
+      host_name: testInterPub
+  paloaltovm:
+      host_name: testPaloVM
+  fortigatevm:
+      host_name: testFortiVM
+  fortigatevm_541:
+      host_name: testFortiVM541
+  intersecvm_lb:
+      host_name: test_node_intersecvm_lb
+  bigipve:
+      host_name: testBigipVe
+      timezone: 'Asia/Tokyo'
+  vthunder_401:
+      host_name: testVthun401
+  vthunder_411:
+      host_name: testVthun411
+  fortigate:
+      vdom_name: testForti
+      admin_prof_name: admin_name
+      user_account_id: account_id
+      account_password: account_pw
+  fortigate_share:
+      vdom_name: testFortSh
+      admin_prof_name: admin_name
+      user_account_id: account_id
+      account_password: account_pw
+  paloalto:
+      vsys_name: testPalo
+  paloalto_share:
+      vsys_name: paloSh
+  bigip:
+      partition_id: testBigip
+      route_domain_id: 10000
+      mng_user_account_id: mng_account_id
+      mng_account_password: mng_account_password
+      certificate_user_account_id: pro_account_id
+      certificate_account_password: pro_account_password
+  bigip_share:
+      partition_id: testBigSh
+      route_domain_id: 10000
+      mng_user_account_id: mng_account_id
+      mng_account_password: mng_account_password
+      certificate_user_account_id: pro_account_id
+      certificate_account_password: pro_account_password
+  thunder:
+      partition_name: testThun
+      user_account_id: account_id
+      account_password: account_pw
+  thunder_share:
+      partition_name: testThunSh
+      user_account_id: account_id
+      account_password: account_pw
+  cisco_l2:
+      service_name: testCiscoL2
+      dns_server_ip_address:
+          create: '10.58.70.11'
+          change: '10.58.70.21'
+      ntp_server_ip_address:
+          create: '10.58.70.12'
+          change: '10.58.70.22'
+      snmp_server_ip_address:
+          create: '10.58.70.13'
+          change: '10.58.70.23'
+      syslog_server_ip_address:
+          create: '10.58.70.14'
+          change: '10.58.70.24'
+  cisco_l3_encrypted:
+      service_name: testCiscoL3Enc
+      dns_server_ip_address:
+          create: '10.58.70.11'
+          change: '10.58.70.21'
+      ntp_server_ip_address:
+          create: '10.58.70.12'
+          change: '10.58.70.22'
+      snmp_server_ip_address:
+          create: '10.58.70.13'
+          change: '10.58.70.23'
+      syslog_server_ip_address:
+          create: '10.58.70.14'
+          change: '10.58.70.24'
+  cisco_l3_plain:
+      service_name: testCiscoL3Pla
+      dns_server_ip_address:
+          create: '10.58.70.11'
+          change: '10.58.70.21'
+      ntp_server_ip_address:
+          create: '10.58.70.12'
+          change: '10.58.70.22'
+      snmp_server_ip_address:
+          create: '10.58.70.13'
+          change: '10.58.70.23'
+      syslog_server_ip_address:
+          create: '10.58.70.14'
+          change: '10.58.70.24'

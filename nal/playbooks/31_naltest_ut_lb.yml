@@ -1,0 +1,10 @@
+---
+- hosts : nallbservers
+  vars_files:
+    - ../group_vars/all/nallbservers.yml
+    - ../group_vars/all/naltest_ut.yml
+  become: yes
+  roles :
+    - check_lb
+
+

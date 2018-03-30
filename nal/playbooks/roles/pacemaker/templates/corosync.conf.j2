@@ -1,0 +1,56 @@
+totem {
+    version: 2
+    secauth: off
+    cluster_name: nalcluster
+    rrp_mode: active
+    interface {
+        ringnumber: 0
+        mcastport: 5405
+    }
+    interface {
+        ringnumber: 1
+        mcastport: 5405
+    }
+    transport: udpu
+}
+
+nodelist {
+{% if server_type == 'lb' %}
+{% for host in nal.lb.nodes %}
+    node {
+        ring0_addr: {{ host.heartbeat_ip }}
+        ring1_addr: {{ host.storage_ip }}
+        nodeid: {{ host.nodeid }}
+    }
+{% endfor %}
+{% endif %}
+{% if server_type == 'ap' %}
+{% for host in nal.ap.nodes %}
+    node {
+        ring0_addr: {{ host.heartbeat_ip }}
+        ring1_addr: {{ host.storage_ip }}
+        nodeid: {{ host.nodeid }}
+    }
+{% endfor %}
+{% endif %}
+{% if server_type == 'db' %}
+{% for host in nal.db.nodes %}
+    node {
+        ring0_addr: {{ host.heartbeat_ip }}
+        ring1_addr: {{ host.storage_ip }}
+        nodeid: {{ host.nodeid }}
+    }
+{% endfor %}
+{% endif %}
+}
+
+quorum {
+    provider: corosync_votequorum
+    two_node: 1
+}
+
+logging {
+    to_logfile: yes
+    logfile: /var/log/cluster/corosync.log
+    to_syslog: yes
+}

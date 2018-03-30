@@ -1,0 +1,22 @@
+---
+- name: Start db service
+  service:
+    name: "{{ item.name }}"
+    state: "{{ item.state }}"
+  with_items:
+    - name: mariadb
+      state: started
+  when: is_redundancy and hostvars[inventory_hostname].is_first_active_node == "active"
+
+- include: initdb.yml
+  when: hostvars[inventory_hostname].is_first_active_node == "active"
+
+- name: Stop db service
+  service:
+    name: "{{ item.name }}"
+    state: "{{ item.state }}"
+  with_items:
+    - name: mariadb
+      state: stopped
+  when: is_redundancy and hostvars[inventory_hostname].is_first_active_node == "active"
+

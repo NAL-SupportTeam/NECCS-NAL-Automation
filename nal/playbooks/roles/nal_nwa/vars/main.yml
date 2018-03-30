@@ -1,0 +1,6 @@
+---
+archive: nal-nwa.tar.gz
+install_dir: "/home/{{ job_user.name }}/NAL/nwa"
+conf: "/home/{{ job_user.name }}/NAL/nwa/job/conf/configrel.py"
+work_ssh_dir: /tmp/work_ssh
+auth_dir: "/home/{{ job_user.name }}/NAL/nwa/job/auth"

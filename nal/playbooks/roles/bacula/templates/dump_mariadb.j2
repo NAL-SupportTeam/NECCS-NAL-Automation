@@ -1,0 +1,12 @@
+#!/bin/sh
+
+SV={{ inventory_hostname }}
+USER=root
+PASSWD=i-portal
+DUMPPATH=/var/lib/mysql/backup
+
+if [ ! -e ${DUMPPATH} ]; then
+  mkdir ${DUMPPATH}
+fi
+mysqldump -u${USER} -p${PASSWD} --all-databases > ${DUMPPATH}/${SV}.dump 2> /dev/null
+exit 0

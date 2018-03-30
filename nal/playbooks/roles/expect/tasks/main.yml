@@ -1,0 +1,9 @@
+---
+- name: Install Expect
+  yum:
+    name: "{{ item.name }}"
+    state: "{{ item.state }}"
+  with_items:
+    - name: expect
+      state: latest
+

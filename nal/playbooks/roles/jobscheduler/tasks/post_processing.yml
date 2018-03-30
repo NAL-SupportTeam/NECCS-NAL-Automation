@@ -1,0 +1,50 @@
+---
+- name: Eesable and start MariaDB
+  service:
+    name: "{{ item.name }}"
+    state: "{{ item.state }}"
+    enabled: "{{ item.enabled }}"
+  with_items:
+    - name: mariadb
+      state: started
+      enabled: yes
+  when: is_redundancy != true and hostvars[inventory_hostname].is_first_active_node == "active"
+
+- name: Eesable and stop JobScheduler
+  service:
+    name: "{{ item.name }}"
+    state: "{{ item.state }}"
+    enabled: "{{ item.enabled }}"
+  with_items:
+    - name: mariadb
+      state: stopped
+      enabled: yes
+  when: is_redundancy != true and hostvars[inventory_hostname].is_first_active_node != "active"
+
+- name: Desable and start MariaDB
+  service:
+    name: "{{ item.name }}"
+    state: "{{ item.state }}"
+    enabled: "{{ item.enabled }}"
+  with_items:
+    - name: mariadb
+      state: stopped
+      enabled: no
+  when: is_redundancy
+
+- name: Create directory to store define file for nal
+  file:
+    path: "/home/{{ job_user.name }}/jobscheduler/{{ inventory_hostname }}/config/live/NAL"
+    state: directory
+    owner: "{{ job_user.name }}"
+    group: "{{ job_user.group }}"
+
+- name: Set define file for nal
+  become: yes
+  become_user: "{{ job_user.name }}"
+  unarchive:
+    src: nal-jobscheduler.tar.gz
+    dest: "/home/{{ job_user.name }}/jobscheduler/{{ inventory_hostname }}/config/live/NAL"
+  args:
+    creates: "/home/{{ job_user.name }}/jobscheduler/{{ inventory_hostname }}/config/live/NAL/common"
+

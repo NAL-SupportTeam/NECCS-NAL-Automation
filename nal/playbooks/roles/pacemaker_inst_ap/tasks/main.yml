@@ -1,0 +1,16 @@
+---
+- include: install.yml
+  when: is_redundancy and job_type == 'jobscheduler'
+
+- include: configure.yml
+  when: is_redundancy and job_type == 'jobscheduler' and hostvars[inventory_hostname].is_first_active_node == "active"
+
+- include: firewalld.yml
+  when: is_redundancy and job_type == 'jobscheduler'
+
+- include: service.yml
+  when: is_redundancy and job_type == 'jobscheduler'
+
+- include: cluster_property.yml
+  when: is_redundancy and job_type == 'jobscheduler' and hostvars[inventory_hostname].is_first_active_node == "active"
+

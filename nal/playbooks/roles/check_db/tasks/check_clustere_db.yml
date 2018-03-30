@@ -1,0 +1,79 @@
+---
+- name: <DB> Check node state
+  shell: |
+    crm node show {{ item }} | grep "^{{ item }}.*: normal"
+  changed_when: false
+  with_items:
+    - "{{ nal.db.nodes[0].name }}"
+    - "{{ nal.db.nodes[1].name }}"
+
+- name: <DB> Check exist resources and group
+  shell: |
+    crm resource show {{ item }} | grep "{{ item }} is running"
+  changed_when: false
+  with_items:
+    - resource_fip
+    - resource_nas
+    - resource_httpd
+    - resource_db
+    - group_nal
+
+- name: <DB> Check exist clone
+  shell: |
+    crm resource show {{ item[0] }} | grep "{{ item[0] }} is running on: {{ item[1] }}"
+  changed_when: false
+  with_nested:
+    - [ clone_check_disk_root, clone_check_ping_svmng, clone_check_ping_storage ]
+    - [ "{{ nal.db.nodes[0].name }}", "{{ nal.db.nodes[1].name }}" ]
+
+## fip resource
+- name: <DB> Check detail of fip resource
+  shell: |
+    crm configure show resource_fip | grep "{{ item.name }}={{ item.value }}"
+  changed_when: false
+  with_items:
+    - name: ip
+      value: "{{ nal.db.fip.ip }}"
+    - name: nic
+      value: "{{ nal.db.fip.nic }}"
+    - name: cidr_netmask
+      value: "{{ nal.db.fip.prefix }}"
+
+## nas resource
+- name: <DB> Check detail of nas resource
+  shell: |
+    crm configure show resource_nas | grep "{{ item.name }}={{ item.value }}"
+  changed_when: false
+  with_items:
+    - name: device
+      value: "\\\"{{ nal.db.nfs_mount.nfs_server }}:{{ nal.db.nfs_mount.nfs_device }}"
+    - name: directory
+      value: "\\\"{{ nal.db.nfs_mount.mountpoint }}"
+
+## check disk root resource
+- name: <DB> Check detail of check disk root resource
+  shell: |
+    crm configure show resource_check_disk_root | grep "{{ item.name }}={{ item.value }}"
+  changed_when: false
+  with_items:
+    - name: device
+      value: "\\\"{{ cluster.db.disk_root }}"
+
+## check ping svmng resource
+- name: <DB> Check detail of check ping svmng resource
+  shell: |
+    crm configure show resource_check_ping_svmng | grep "{{ item.name }}={{ item.value }}"
+  changed_when: false
+  with_items:
+    - name: host_list
+      value: "\\\"{{ cluster.host_machine.db1.svmng_ip }} {{ cluster.host_machine.db2.svmng_ip }}"
+
+## check ping storage resource
+- name: <DB> Check detail of check ping storage resource
+  shell: |
+    crm configure show resource_check_ping_storage | grep "{{ item.name }}={{ item.value }}"
+  changed_when: false
+  with_items:
+    - name: host_list
+      value: "\\\"{{ cluster.host_machine.db1.storage_ip }} {{ cluster.host_machine.db2.storage_ip }}"
+

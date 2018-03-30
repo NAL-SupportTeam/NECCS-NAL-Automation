@@ -1,0 +1,17 @@
+---
+- name: Start rpcbind
+  service:
+    name: "{{ item.name }}"
+    state: "{{ item.state }}"
+    enabled: "{{ item.enabled }}"
+  with_items:
+    - name: rpcbind
+      state: started
+      enabled: yes
+
+- include: mount_ap.yml
+  when: server_type == "ap"
+
+- include: mount_db.yml
+  when: server_type == "db"
+

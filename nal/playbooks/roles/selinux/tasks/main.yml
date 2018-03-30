@@ -1,0 +1,25 @@
+---
+- name: Check SELinux status
+  command: getenforce
+  register: result_state
+  changed_when: false
+  ignore_errors: yes
+
+##- name: Debug check state
+##  debug:
+##    var: result_state
+
+- name: Check SELinu config
+  command: grep '^SELINUX *= *disabled$' /etc/selinux/config
+  register: result_config
+  changed_when: false
+  ignore_errors: yes
+
+##- name: Debug check state
+##  debug:
+##    var: result_config
+
+- name: Disable SELinux
+  selinux:
+    state: disabled
+  when: result_state.stdout == "Enforcing" or result_config.stdout == ""

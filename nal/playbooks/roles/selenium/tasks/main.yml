@@ -1,0 +1,6 @@
+---
+
+- include: selenium.yml
+
+- include: test_case.yml
+

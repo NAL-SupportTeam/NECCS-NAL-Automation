@@ -1,0 +1,24 @@
+---
+## Create install directory for nal-job
+- name: Create install directory for nal-job
+  file:
+   path: "{{ install_dir }}"
+   state: directory
+
+## Install nal-job
+- name: Unarchive nal-job archive file
+  unarchive:
+    src: "{{ archive }}"
+    dest: "{{ install_dir }}"
+  args:
+    creates: "{{ install_dir }}/sh/common"
+
+- name: Change owner and group of all files under install directory
+  file:
+    path: "{{ install_dir }}/sh"
+    state: directory
+    recurse: yes
+    owner: "{{ job_user.name }}"
+    group: "{{ job_user.group }}"
+    mode: 0755
+

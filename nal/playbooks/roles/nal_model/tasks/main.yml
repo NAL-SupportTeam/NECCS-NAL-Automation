@@ -1,0 +1,24 @@
+---
+## Install nal-model
+- name: Unarchive nal-model archive file
+  unarchive:
+    src: "{{ archive }}"
+    dest: "{{ install_dir }}"
+
+- name: Delete old files
+  file:
+    path: "{{ install_dir }}/sql"
+    state: absent
+
+- name: Unarchive sql archive file
+  unarchive:
+    src: nal-sql.tar.gz
+    dest: "{{ install_dir }}"
+
+## Create log directory
+- name: Create log directory
+  file:
+    path: "{{ log_dir }}"
+    state: directory
+    owner: apache
+    group: apache

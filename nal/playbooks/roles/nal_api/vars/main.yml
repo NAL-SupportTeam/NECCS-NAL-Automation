@@ -1,0 +1,6 @@
+---
+archive_nal: nal-api.tar.gz
+archive_wim: wim-api.tar.gz
+install_dir: /var/www/html
+conf_nal: /var/www/html/Nal/api/Nal/Config.php
+conf_wim: /var/www/html/Wim/api/Nal/Config.php

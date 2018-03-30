@@ -1,0 +1,10 @@
+---
+server_type: db
+
+firewall_allow_ports:
+  apache:
+    - 80/tcp
+
+firewall_allow_services:
+  pacemaker:
+    - high-availability

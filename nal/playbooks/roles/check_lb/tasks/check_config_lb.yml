@@ -1,0 +1,51 @@
+---
+## SELinux
+- name: <LB> Check state by getenforce
+  shell: |
+    getenforce | grep Permissive
+  changed_when: false
+
+- name: <LB> Check configuration of SELinux config
+  shell: |
+    grep '^SELINUX *= *disabled$' /etc/selinux/config
+  changed_when: false
+
+## /etc/hosts
+- name: <LB> Check /etc/hosts
+  shell: |
+    grep "^{{ item.ip }}.*{{ item.name }}" /etc/hosts
+  changed_when: false
+  with_items:
+    - ip: "{{ nal.lb.nodes[0].svmng_ip }}"
+      name: "{{ nal.lb.nodes[0].name }}"
+    - ip: "{{ nal.lb.nodes[1].svmng_ip }}"
+      name: "{{ nal.lb.nodes[1].name }}"
+    - ip: "{{ nal.lb.fip.ip }}"
+      name: "{{ nal.lb.fip.name }}"
+
+## firewalld
+- name: <LB> Check accept port
+  shell: |
+    iptables-save | grep "\-\-dport 80" | grep "\-j ACCEPT"
+  changed_when: false
+
+## Haproxy
+- name: <LB> Check configuration of Haproxy
+  shell: |
+    grep "server {{ item.name }} {{ item.ip }}:{{ item.port }} check" /etc/haproxy/haproxy.cfg
+  changed_when: false
+  with_items:
+    - name: "{{ nal.web.nodes[0].name }}"
+      ip: "{{ nal.web.nodes[0].svmng_ip }}"
+      port: "{{ nal.web.nodes[0].http_port }}"
+    - name: "{{ nal.web.nodes[1].name }}"
+      ip: "{{ nal.web.nodes[1].svmng_ip }}"
+      port: "{{ nal.web.nodes[1].http_port }}"
+
+## rsyslog
+- name: <LB> Check configuration of rsyslog
+  shell: |
+    grep "^local2\.\*.*/var/log/haproxy.log" /etc/rsyslog.conf
+  changed_when: false
+
+

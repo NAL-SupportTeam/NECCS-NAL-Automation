@@ -1,0 +1,21 @@
+---
+## Move DB files onto NFS Disk at active node
+- name: Check existing mysql directory on NFS
+  stat:
+    path: "{{ db_root }}"
+  register: is_exists
+  ignore_errors: yes
+
+- name: Move DB files on NFS Disk
+  command: mv /var/lib/mysql {{ mountpoint }}
+  when: is_exists.stat.exists == false
+
+## Create symbolic link to DB directory
+- name: Create symbolic link to DB directory
+  file:
+   path: /var/lib/mysql
+   src: "{{ db_root }}"
+   state: link
+   owner: mysql
+   group: mysql
+ 

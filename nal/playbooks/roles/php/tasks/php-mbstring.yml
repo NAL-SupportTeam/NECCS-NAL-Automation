@@ -1,0 +1,14 @@
+---
+## Copy php-mbstring archive file
+- name: Copy php-mbstring archive file
+  copy:
+    src: php-mbstring-5.4.16-42.el7.x86_64.rpm
+    dest: /tmp
+
+## Install php-mbstring
+- name: Install php-mbstring
+  yum:
+    name: "{{ item.name }}"
+  with_items:
+    - name: "file:///tmp/php-mbstring-5.4.16-42.el7.x86_64.rpm"
+

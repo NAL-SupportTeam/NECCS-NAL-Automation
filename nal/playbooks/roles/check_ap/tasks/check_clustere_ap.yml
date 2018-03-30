@@ -1,0 +1,94 @@
+---
+- name: <AP> Check node state
+  shell: |
+    crm node show {{ item }} | grep "^{{ item }}.*: normal"
+  changed_when: false
+  with_items:
+    - "{{ nal.ap.nodes[0].name }}"
+    - "{{ nal.ap.nodes[1].name }}"
+
+- name: <AP> Check exist resources and group
+  shell: |
+    crm resource show {{ item }} | grep "{{ item }} is running"
+  changed_when: false
+  with_items:
+    - resource_fip_svmng
+    - resource_fip_dcmng
+    - resource_nas
+    - resource_httpd
+    - resource_db
+    - resource_jobscheduler
+    - group_nal
+
+- name: <AP> Check exist clone
+  shell: |
+    crm resource show {{ item[0] }} | grep "{{ item[0] }} is running on: {{ item[1] }}"
+  changed_when: false
+  with_nested:
+    - [ clone_check_disk_root, clone_check_ping_svmng, clone_check_ping_storage ]
+    - [ "{{ nal.ap.nodes[0].name }}", "{{ nal.ap.nodes[1].name }}" ]
+
+## svmng fip resource
+- name: <AP> Check detail of svmng fip resource
+  shell: |
+    crm configure show resource_fip_svmng | grep "{{ item.name }}={{ item.value }}"
+  changed_when: false
+  with_items:
+    - name: ip
+      value: "{{ nal.ap.fip.ip }}"
+    - name: nic
+      value: "{{ nal.ap.fip.nic }}"
+    - name: cidr_netmask
+      value: "{{ nal.ap.fip.prefix }}"
+
+## dcmng fip resource
+- name: <AP> Check detail of dcmng fip resource
+  shell: |
+    crm configure show resource_fip_dcmng | grep "{{ item.name }}={{ item.value }}"
+  changed_when: false
+  with_items:
+    - name: ip
+      value: "{{ nal.ap.wim_fip.ip }}"
+    - name: nic
+      value: "{{ nal.ap.wim_fip.nic }}"
+    - name: cidr_netmask
+      value: "{{ nal.ap.wim_fip.prefix }}"
+
+## nas resource
+- name: <AP> Check detail of nas resource
+  shell: |
+    crm configure show resource_nas | grep "{{ item.name }}={{ item.value }}"
+  changed_when: false
+  with_items:
+    - name: device
+      value: "\\\"{{ nal.ap.nfs_mount.nfs_server }}:{{ nal.ap.nfs_mount.nfs_device }}"
+    - name: directory
+      value: "\\\"{{ nal.ap.nfs_mount.mountpoint }}"
+
+## check disk root resource
+- name: <AP> Check detail of check disk root resource
+  shell: |
+    crm configure show resource_check_disk_root | grep "{{ item.name }}={{ item.value }}"
+  changed_when: false
+  with_items:
+    - name: device
+      value: "\\\"{{ cluster.ap.disk_root }}"
+
+## check ping svmng resource
+- name: <AP> Check detail of check ping svmng resource
+  shell: |
+    crm configure show resource_check_ping_svmng | grep "{{ item.name }}={{ item.value }}"
+  changed_when: false
+  with_items:
+    - name: host_list
+      value: "\\\"{{ cluster.host_machine.ap1.svmng_ip }} {{ cluster.host_machine.ap2.svmng_ip }}"
+
+## check ping storage resource
+- name: <AP> Check detail of check ping storage resource
+  shell: |
+    crm configure show resource_check_ping_storage | grep "{{ item.name }}={{ item.value }}"
+  changed_when: false
+  with_items:
+    - name: host_list
+      value: "\\\"{{ cluster.host_machine.ap1.storage_ip }} {{ cluster.host_machine.ap2.storage_ip }}"
+

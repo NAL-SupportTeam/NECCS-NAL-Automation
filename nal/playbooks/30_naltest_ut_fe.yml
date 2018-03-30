@@ -1,0 +1,10 @@
+---
+- hosts : nalfeservers
+  vars_files:
+    - ../group_vars/all/nalfeservers.yml
+    - ../group_vars/all/naltest_ut.yml
+  become: yes
+  roles :
+    - check_fe
+
+

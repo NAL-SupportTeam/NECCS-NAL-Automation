@@ -1,0 +1,27 @@
+---
+## Install PHP
+- name: Install PHP
+  yum:
+    name: "{{ item.name }}"
+    state: "{{ item.state }}"
+  with_items:
+    - name: php
+      state: latest
+
+- name: Backup php.conf
+  command: |
+    cp -p
+    /etc/php.ini
+    /etc/php.ini.org
+  args:
+    creates: /etc/php.ini.org
+    removes: /etc/php.ini
+  register: result
+
+## Configure php.ini
+- name: Create php.ini
+  copy:
+    src: php.ini
+    dest: /etc/php.ini
+  when: result.changed
+

@@ -1,0 +1,5 @@
+---
+- include: check_node_fe.yml
+- include: check_package_fe.yml
+- include: check_service_fe.yml
+- include: check_config_fe.yml

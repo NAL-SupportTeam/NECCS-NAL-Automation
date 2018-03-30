@@ -1,0 +1,28 @@
+---
+- name: Create nal.conf
+  template:
+    src: nal.conf.j2
+    dest: /etc/httpd/conf.d/nal.conf
+
+- name: Eesable and start Apache for active node
+  service:
+    name: "{{ item.name }}"
+    state: "{{ item.state }}"
+    enabled: "{{ item.enabled }}"
+  with_items:
+    - name: httpd
+      state: started
+      enabled: yes
+  when: hostvars[inventory_hostname].is_first_active_node == "active"
+
+- name: Eesable and stop Apache for standby node
+  service:
+    name: "{{ item.name }}"
+    state: "{{ item.state }}"
+    enabled: "{{ item.enabled }}"
+  with_items:
+    - name: httpd
+      state: stopped
+      enabled: yes
+  when: hostvars[inventory_hostname].is_first_active_node != "active"
+

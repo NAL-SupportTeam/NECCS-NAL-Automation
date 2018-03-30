@@ -1,0 +1,6 @@
+---
+- include: check_node_lb.yml
+- include: check_package_lb.yml
+- include: check_service_lb.yml
+- include: check_config_lb.yml
+- include: check_clustere_lb.yml

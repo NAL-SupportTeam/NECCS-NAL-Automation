@@ -1,0 +1,6 @@
+---
+server_type: web
+
+firewall_allow_ports:
+  apache:
+    - 80/tcp

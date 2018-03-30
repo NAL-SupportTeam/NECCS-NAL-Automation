@@ -1,0 +1,8 @@
+---
+- hosts : nalfeservers
+  vars_files:
+    - ../group_vars/all/nalfeservers.yml
+  become: yes
+  roles :
+   - frontend
+   - apache_iaas

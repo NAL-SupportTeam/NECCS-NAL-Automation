@@ -1,0 +1,68 @@
+---
+## SELinux
+- name: <DB> Check state by getenforce
+  shell: |
+    getenforce | grep Permissive
+  changed_when: false
+
+- name: <DB> Check configuration of SELinux config
+  shell: |
+    grep '^SELINUX *= *disabled$' /etc/selinux/config
+  changed_when: false
+
+## /etc/hosts
+- name: <DB> Check /etc/hosts
+  shell: |
+    grep "^{{ item.ip }}.*{{ item.name }}" /etc/hosts
+  changed_when: false
+  with_items:
+    - ip: "{{ nal.db.nodes[0].svmng_ip }}"
+      name: "{{ nal.db.nodes[0].name }}"
+    - ip: "{{ nal.db.nodes[1].svmng_ip }}"
+      name: "{{ nal.db.nodes[1].name }}"
+    - ip: "{{ nal.db.fip.ip }}"
+      name: "{{ nal.db.fip.name }}"
+
+## firewalld
+- name: <DB> Check accept port
+  shell: |
+    iptables-save | grep "\-\-dport 80" | grep "\-j ACCEPT"
+  changed_when: false
+
+## bacula
+- name: <DB> Chekc exist onfiguration file for Bacula
+  stat:
+    path: /etc/bacula/dump_mariadb
+  changed_when: false
+
+## mariadb
+- name: <DB> Check existing nal tables
+  shell: |
+    mysql -h localhost -pi-portal -D nal -e "show tables;" | grep WIM_DEVICE_ENDPOINT_MNG
+  changed_when: false
+  when: hostvars[inventory_hostname].is_first_active_node == "active"
+
+## httpd
+- name: <DB> Check configuration of httpd
+  shell: |
+    grep "{{ item }}" /etc/httpd/conf/httpd.conf
+  changed_when: false
+  with_items:
+    - "LoadModule.*wsgi_module.*modules/mod_wsgi.so"
+    - "WSGIScriptAlias.*/.*/var/www/html/rest/api/index.py"
+
+## nal-model
+- name: <DB> Check exist log directory for nal-model
+  stat:
+    path: /var/log/nal
+  changed_when: false
+
+## logrotate
+- name: Check configurateion for logrotate
+  shell: |
+    grep "{{ item }}" /etc/logrotate.d/httpd
+  changed_when: false
+  with_items:
+    - "/var/log/httpd/\\*log"
+    - "/var/log/nal/nal_model_trace.log"
+

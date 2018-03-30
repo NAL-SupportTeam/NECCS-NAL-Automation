@@ -1,0 +1,94 @@
+---
+## Create install directory for nal-nwa
+- name: Create install directory for nal-nwa
+  file:
+    path: "{{ install_dir }}"
+    state: directory
+
+## Install nal-nwa
+- name: Unarchive nal-nwa archive file
+  unarchive:
+    src: "{{ archive }}"
+    dest: "{{ install_dir }}"
+  args:
+    creates: "{{ conf }}"
+  register: result_unarchive
+
+- name: Backup nwa config file
+  command: cp -p {{ item }} {{ item }}.org
+  args:
+    creates: "{{ item }}.org"
+    removes: "{{ item }}"
+  with_items:
+    - "{{ conf }}"
+  when: result_unarchive.changed
+
+- name: Change value of REST_ENDPOINT
+  lineinfile:
+    dest: "{{ item }}"
+    regexp: "REST_ENDPOINT *="
+    line: "    REST_ENDPOINT = 'http://{{ nal.db.fip.ip }}/rest/api/index.py/'"
+  with_items:
+    - "{{ conf }}"
+  when: result_unarchive.changed
+
+## Create directory to store auth files
+- name: Create auth directory for nal-nwa
+  file:
+    path: "{{ install_dir }}/job/auth"
+    state: directory
+
+## Get MSA public key
+- name: Check existing key file for msa
+  stat:
+    path: "{{ install_dir }}/job/auth/id_rsa_msa_to_intersec.pub"
+  register: is_exists_msa
+
+- name: Get MSA public key
+  copy:
+    src: id_rsa_msa_to_intersec.pub
+    dest: "{{ install_dir }}/job/auth/id_rsa_msa_to_intersec.pub"
+  when: is_exists_msa.stat.exists == false
+
+- name: Change owner/group of install directory for nal-nwa
+  file:
+    path: "{{ install_dir }}"
+    state: directory
+    recurse: yes
+    owner: "{{ job_user.name }}"
+    group: "{{ job_user.group }}"
+  when: result_unarchive.changed
+
+## Create auth key for vlan-gw
+- name: Check existing key file for vxlan-gw
+  stat:
+    path: "{{ auth_dir }}/id_rsa"
+  register: is_exists_vxlangw
+  when: hostvars[inventory_hostname].is_first_active_node == "active"
+
+- name: Create auth key for vlan-gw
+  command: ssh-keygen -t rsa -N "" -f {{ auth_dir }}/id_rsa
+  register: result_keygen
+  when: hostvars[inventory_hostname].is_first_active_node == "active" and is_exists_vxlangw.stat.exists == false
+
+- name: Copy new keys to another ap node
+  shell: scp -p {{ auth_dir }}/{{ item }} root@{{ nal.ap.nodes[1].svmng_ip }}:{{ auth_dir }}
+  with_items:
+    - id_rsa
+    - id_rsa.pub
+  when: result_keygen.changed
+
+- name: Change mode of key files
+  file:
+    path: "{{ auth_dir }}/id_rsa"
+    owner: "{{ job_user.name }}"
+    group: "{{ job_user.group }}"
+    mode: 0600
+
+- name: Change mode of pub-key files
+  file:
+    path: "{{ auth_dir }}/id_rsa.pub"
+    owner: "{{ job_user.name }}"
+    group: "{{ job_user.group }}"
+    mode: 0644
+

@@ -1,0 +1,93 @@
+---
+# Set tenant_name for selenium config
+- name: Check exists config file
+  stat:
+    path: "{{ test_case_config_dir }}/{{ test_case_config_file }}"
+  register: check_exists_config
+
+- name: Edit config file (Setting tenant_name for test tenant)
+  lineinfile:
+    dest: "{{ test_case_config_dir }}/{{ test_case_config_file }}"
+    backrefs: yes
+    regexp: '^PROJECT_NAME\s*\=\s*.*$'
+    line: "PROJECT_NAME = '{{ setting_tenant_params[test_pattern[func_name].config_set].tenant_name }}'"
+    state: present
+    create: no
+    backup: no
+  when: check_exists_config.stat.exists
+
+- name: Edit config file (Setting tenant_name for test tenant)
+  lineinfile:
+    dest: "{{ test_case_config_dir }}/{{ test_case_config_file }}"
+    backrefs: yes
+    regexp: '^USER_NAME\s*\=\s*.*$'
+    line: "USER_NAME = '{{ setting_tenant_params[test_pattern[func_name].config_set].user_name }}'"
+    state: present
+    create: no
+    backup: no
+  when: check_exists_config.stat.exists
+
+- name: Edit config file (Setting tenant_name for test tenant)
+  lineinfile:
+    dest: "{{ test_case_config_dir }}/{{ test_case_config_file }}"
+    backrefs: yes
+    regexp: '^USER_PASSWORD\s*\=\s*.*$'
+    line: "USER_PASSWORD = '{{ setting_tenant_params[test_pattern[func_name].config_set].user_password }}'"
+    state: present
+    create: no
+    backup: no
+  when: check_exists_config.stat.exists
+
+- name: Edit config file (Setting network_address_v4 for test tenant)
+  lineinfile:
+    dest: "{{ test_case_config_dir }}/{{ test_case_config_file }}"
+    backrefs: yes
+    regexp: '^NETWORK_ADDRESS_01\s*\=\s*.*$'
+    line: "NETWORK_ADDRESS_01 = '{{ setting_tenant_params[test_pattern[func_name].config_set].network_address_v4 }}'"
+    state: present
+    create: no
+    backup: no
+  when: check_exists_config.stat.exists
+
+- name: Edit config file (Setting network_address_v6 for test tenant)
+  lineinfile:
+    dest: "{{ test_case_config_dir }}/{{ test_case_config_file }}"
+    backrefs: yes
+    regexp: '^NETWORK_ADDRESS_03\s*\=\s*.*$'
+    line: "NETWORK_ADDRESS_03 = '{{ setting_tenant_params[test_pattern[func_name].config_set].network_address_v6 }}'"
+    state: present
+    create: no
+    backup: no
+  when: check_exists_config.stat.exists
+
+- name: Edit config file (Setting ipv6_address for test tenant)
+  lineinfile:
+    dest: "{{ test_case_config_dir }}/{{ test_case_config_file }}"
+    backrefs: yes
+    regexp: '^{{ item.set_name }}\s*\=\s*.*$'
+    line: "{{ item.set_name }} = '{{ item.set_value }}'"
+    state: present
+    create: no
+    backup: no
+  with_items: "{{ setting_tenant_params[test_pattern[func_name].config_set].ipv6_address }}"
+  when: check_exists_config.stat.exists
+
+- name: Edit config file (Setting webclient_ip for test tenant)
+  lineinfile:
+    dest: "{{ test_case_config_dir }}/{{ test_case_config_file }}"
+    backrefs: yes
+    regexp: '^WEB_CLIENT_IP\s*\=\s*.*$'
+    line: "WEB_CLIENT_IP = '{{ setting_tenant_params[test_pattern[func_name].config_set].webclient_ip }}'"
+    state: present
+    create: no
+    backup: no
+  when: check_exists_config.stat.exists
+
+# Execute test_case
+- name: Exec selenium test case
+  command: python {{ nal_test_home }}/nal_check_infrastructure.py {{ item }}
+
+  environment:
+    DISPLAY: ":1"
+  with_items:
+    - "{{ test_pattern[func_name].selenium_func_name }}"

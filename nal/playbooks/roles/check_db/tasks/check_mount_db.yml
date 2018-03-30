@@ -1,0 +1,27 @@
+---
+- name: <DB> Get state of nfs mount
+  shell: mount -t nfs
+  register: result_mount
+  changed_when: false
+  ignore_errors: yes
+
+- name: <DB> Check state of nfs mount on active node
+  debug:
+    msg: "NG: NFS device has not been mounted at active node!"
+  when: hostvars[inventory_hostname].is_first_active_node == "active" and result_mount.stdout == ""
+
+- name: <DB> Check state of nfs mount on active node
+  debug:
+    msg: "OK: NFS device is mounted at active node."
+  when: hostvars[inventory_hostname].is_first_active_node == "active" and result_mount.stdout != ""
+
+- name: <DB> Check state of nfs mount on standby node
+  debug:
+    msg: "OK: NFS device is not mounted normaly at standby node."
+  when: hostvars[inventory_hostname].is_first_active_node != "active" and result_mount.stdout == ""
+
+- name: <DB> Check state of nfs mount on standby node
+  debug:
+    msg: "NG: NFS device has been mounted at standby node!"
+  when: hostvars[inventory_hostname].is_first_active_node != "active" and result_mount.stdout != ""
+

@@ -1,0 +1,42 @@
+---
+## Move DB files onto NFS Disk at active node
+- name: Check existing mysql directory on NFS
+  stat:
+    path: "{{ db_root }}"
+  register: is_exists
+  ignore_errors: yes
+  when: hostvars[inventory_hostname].is_first_active_node == "active"
+
+- name: Move DB files on NFS Disk
+  command: mv /var/lib/mysql {{ mountpoint }}
+  when: hostvars[inventory_hostname].is_first_active_node == "active" and is_exists.stat.exists == false
+
+## Delete DB files at standby node
+- name: Check existing symbolic link file or not
+  stat:
+    path: /var/lib/mysql
+  register: is_exists
+  ignore_errors: yes
+  when: hostvars[inventory_hostname].is_first_active_node != "active"
+
+- name: Delete DB files at standby node
+  file	:
+    path: /var/lib/mysql
+    state: absent
+  when: hostvars[inventory_hostname].is_first_active_node != "active" and is_exists.stat.exists == true
+
+- name: Create dummy directory to create symbolic link at standby node
+  file:
+   path: "{{ db_root }}"
+   state: directory
+  when: hostvars[inventory_hostname].is_first_active_node != "active"
+
+## Create symbolic link to DB directory at both nodes
+- name: Create symbolic link to DB directory at both nodes
+  file:
+   path: /var/lib/mysql
+   src: "{{ db_root }}"
+   state: link
+   owner: mysql
+   group: mysql
+ 

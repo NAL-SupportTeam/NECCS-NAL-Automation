@@ -1,0 +1,9 @@
+---
+# Create selenium config
+- name: Create selenium config file
+  template:
+    src:   config.j2
+    dest:  "{{ test_case_config_dir }}/{{ test_case_config_file }}"
+    owner: root
+    group: root
+    mode:  "0644"

@@ -1,0 +1,22 @@
+---
+## Prepare work directory for suds_py3
+- name: Create work directory
+  file:
+    path: "{{ suds_py3.work_dir }}"
+    state: directory
+
+## Install suds_py3
+- name: Unarchive suds_py3 archive file
+  unarchive:
+    src: "{{ suds_py3.archive }}"
+    dest: "{{ suds_py3.work_dir }}"
+  args:
+    creates: "{{ suds_py3.plugin_dir }}"
+  register: result_unarchive
+
+## Setup suds_py3 to python
+- name: Setup suds_py3
+  command: python3 setup.py install
+  args:
+    chdir: "{{ suds_py3.plugin_dir }}"
+  when: result_unarchive.changed

@@ -1,0 +1,10 @@
+---
+## Install MariaDB
+- name: Install MariaDB
+  yum:
+    name: "{{ item.name }}"
+    state: "{{ item.state }}"
+  with_items:
+    - name: mariadb-server
+      state: latest
+

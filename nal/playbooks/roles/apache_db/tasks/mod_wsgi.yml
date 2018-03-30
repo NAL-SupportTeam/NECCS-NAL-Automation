@@ -1,0 +1,34 @@
+---
+## Prepare work directory for mod_wsgi
+- name: Create work directory for python
+  file:
+    path: "{{ mod_wsgi.work_dir }}"
+    state: directory
+
+## Install Python
+- name: Unarchive mod_wsgi archive file
+  unarchive:
+    src: "{{ mod_wsgi.archive }}"
+    dest: "{{ mod_wsgi.work_dir }}"
+  args:
+    creates: "{{ mod_wsgi.work_dir2 }}"
+  register: result_unarchive
+
+- name: Configure before make for python
+  command: ./configure CFLAGS=-fPIC --with-apxs=/usr/bin/apxs --with-python=/usr/bin/python3
+  args:
+    chdir: "{{ mod_wsgi.work_dir2 }}"
+  when: result_unarchive.changed
+
+- name: Make python
+  command: make
+  args:
+    chdir: "{{ mod_wsgi.work_dir2 }}"
+  when: result_unarchive.changed
+
+- name: Make install python
+  command: make install
+  args:
+    chdir: "{{ mod_wsgi.work_dir2 }}"
+  when: result_unarchive.changed
+

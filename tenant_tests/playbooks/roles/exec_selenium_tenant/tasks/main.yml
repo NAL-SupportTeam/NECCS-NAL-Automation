@@ -1,0 +1,8 @@
+---
+- include: create_config.yml
+- include: exec_tenant_test.yml func_name={{ outer_item }}
+  with_items: "{{ selenium.func_name_tenant_test[pattern] }}"
+  loop_control:
+    loop_var: outer_item
+
+- include: save_test_evidence.yml

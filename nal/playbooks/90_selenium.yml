@@ -1,0 +1,7 @@
+---
+- hosts : seleniumservers 
+  vars_files:
+    - ../group_vars/all/seleniumservers.yml
+  become: yes
+  roles :
+   - selenium

@@ -1,0 +1,117 @@
+---
+## Install test_case
+- name: Create nal_home directory
+  file:
+    path: "{{ nal_home_dir }}"
+    state: "directory"
+
+- name: Install selenium test_case
+  unarchive:
+    src: "{{ test_case_archive }}"
+    dest: "{{ nal_home_dir }}"
+
+- name: Check exists config file
+  stat:
+    path: "{{ test_case_config_dir }}/{{ test_case_config_file }}"
+  register: check_exists_config
+
+- name: Edit config file (Setting base_url for iaas dashboard)
+  lineinfile:
+    dest: "{{ test_case_config_dir }}/{{ test_case_config_file }}"
+    backrefs: yes
+    regexp: '^SET_BASE_URL\s*\=\s*.*$'
+    line: "SET_BASE_URL = '{{ selenium.portal_endpoint[dc_id].base_url }}'"
+    state: present
+    create: no
+    backup: yes
+  when: check_exists_config.stat.exists
+
+- name: Edit config file (Setting admin_base_url for iaas dashboard)
+  lineinfile:
+    dest: "{{ test_case_config_dir }}/{{ test_case_config_file }}"
+    backrefs: yes
+    regexp: '^SET_GLOBAL_BASE_URL\s*\=\s*.*$'
+    line: "SET_GLOBAL_BASE_URL = '{{ selenium.portal_endpoint[dc_id].admin_base_url }}'"
+    state: present
+    create: no
+  when: check_exists_config.stat.exists
+
+- name: Edit config file (Setting user_name for iaas dashboard)
+  lineinfile:
+    dest: "{{ test_case_config_dir }}/{{ test_case_config_file }}"
+    backrefs: yes
+    regexp: '^USER_NAME\s*\=\s*.*$'
+    line: "USER_NAME = '{{ selenium.user_id }}'"
+    state: present
+    create: no
+  when: check_exists_config.stat.exists
+
+- name: Edit config file (Setting password for iaas dashboard)
+  lineinfile:
+    dest: "{{ test_case_config_dir }}/{{ test_case_config_file }}"
+    backrefs: yes
+    regexp: '^USER_PASSWORD\s*\=\s*.*$'
+    line: "USER_PASSWORD = '{{ selenium.user_password }}'"
+    state: present
+    create: no
+  when: check_exists_config.stat.exists
+
+- name: Edit config file (Setting admin_user_name for iaas dashboard)
+  lineinfile:
+    dest: "{{ test_case_config_dir }}/{{ test_case_config_file }}"
+    backrefs: yes
+    regexp: '^ADMIN_USER_NAME\s*\=\s*.*$'
+    line: "ADMIN_USER_NAME = '{{ selenium.admin_user_id }}'"
+    state: present
+    create: no
+  when: check_exists_config.stat.exists
+
+- name: Edit config file (Setting admin_password for iaas dashboard)
+  lineinfile:
+    dest: "{{ test_case_config_dir }}/{{ test_case_config_file }}"
+    backrefs: yes
+    regexp: '^ADMIN_USER_PASSWORD\s*\=\s*.*$'
+    line: "ADMIN_USER_PASSWORD = '{{ selenium.admin_user_password }}'"
+    state: present
+    create: no
+  when: check_exists_config.stat.exists
+
+- name: Edit config file (Setting role list for create role)
+  lineinfile:
+    dest: "{{ test_case_config_dir }}/{{ test_case_config_file }}"
+    backrefs: yes
+    regexp: '^CREATE_ROLE_LIST\s*\=\s*.*$'
+    line: "CREATE_ROLE_LIST = '{{ selenium.role_list[dc_id].create_role_list }}'"
+    state: present
+    create: no
+  when: check_exists_config.stat.exists
+
+- name: Edit config file (Setting role list for set role)
+  lineinfile:
+    dest: "{{ test_case_config_dir }}/{{ test_case_config_file }}"
+    backrefs: yes
+    regexp: '^SET_ROLE_LIST\s*\=\s*.*$'
+    line: "SET_ROLE_LIST = '{{ selenium.role_list[dc_id].set_role_list }}'"
+    state: present
+    create: no
+  when: check_exists_config.stat.exists
+
+- name: Edit config file (Setting nal version)
+  lineinfile:
+    dest: "{{ test_case_config_dir }}/{{ test_case_config_file }}"
+    backrefs: yes
+    regexp: '^SET_NAL_VERSION\s*\=\s*.*$'
+    line: "SET_NAL_VERSION = '{{ selenium.nal_version }}'"
+    state: present
+    create: no
+  when: check_exists_config.stat.exists
+
+- name: Edit config file (Setting evidence folder)
+  lineinfile:
+    dest: "{{ test_case_config_dir }}/{{ test_case_config_file }}"
+    backrefs: yes
+    regexp: '^SET_EVIDENCE\s*\=\s*.*$'
+    line: "SET_EVIDENCE = '{{ evidence_dir }}'"
+    state: present
+    create: no
+  when: check_exists_config.stat.exists

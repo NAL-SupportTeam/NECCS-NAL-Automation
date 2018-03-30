@@ -1,0 +1,7 @@
+---
+## Allow Ports for Apache
+- include: firewalld.yml
+
+## Install apache
+- include: install.yml
+

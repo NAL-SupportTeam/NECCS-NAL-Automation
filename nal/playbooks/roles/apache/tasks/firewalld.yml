@@ -1,0 +1,20 @@
+---
+- name: Start firewalld
+  service:
+    name: "{{ item.name }}"
+    state: "{{ item.state }}"
+    enabled: "{{ item.enabled }}"
+  with_items:
+    - name: firewalld
+      state: started
+      enabled: yes
+
+## Allows TCP ports for apache
+- name: Allows TCP ports for apache
+  firewalld:
+    port: "{{ item }}"
+    permanent: yes
+    immediate: yes
+    state: enabled
+  with_items:
+    - "{{ firewall_allow_ports.apache }}"

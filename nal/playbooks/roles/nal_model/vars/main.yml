@@ -1,0 +1,4 @@
+---
+archive: nal-model.tar.gz
+install_dir: /var/www/html
+log_dir: /var/log/nal

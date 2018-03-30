@@ -1,0 +1,9 @@
+---
+- hosts : nalapservers
+  vars_files:
+    - ../group_vars/all/common.yml
+    - ../group_vars/all/nalapservers.yml
+    - ../group_vars/all/naltest_ut.yml
+  become: yes
+  roles :
+    - check_ap

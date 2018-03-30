@@ -1,0 +1,11 @@
+---
+- name: Install Apache
+  yum:
+    name: "{{ item.name }}"
+    state: "{{ item.state }}"
+  with_items:
+    - name: mod_ssl
+      state: latest
+    - name: httpd
+      state: latest
+

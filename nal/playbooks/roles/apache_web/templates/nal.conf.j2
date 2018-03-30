@@ -1,0 +1,4 @@
+<VirtualHost *:80>
+        ProxyPass /     http://{{ nal.ap.fip.ip }}/
+        ProxyPassReverse /      http://{{ nal.ap.fip.ip }}/
+</VirtualHost>

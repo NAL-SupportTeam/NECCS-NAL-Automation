@@ -1,0 +1,88 @@
+---
+## install necessary packages to install python
+- name: install necessary packages to install python
+  yum:
+    name: "{{ item.name }}"
+    state: "{{ item.state }}"
+  with_items:
+    - name: zlib-devel
+      state: latest
+    - name: bzip2-devel
+      state: latest
+    - name: openssl-devel
+      state: latest
+    - name: ncurses-devel
+      state: latest
+    - name: sqlite-devel
+      state: latest
+    - name: readline-devel
+      state: latest
+    - name: tk-devel
+      state: latest
+    - name: gcc
+      state: latest
+    - name: httpd-devel
+      state: latest
+    - name: python-devel
+      state: latest
+    - name: unzip
+      state: latest
+
+## Prepare python directory
+- name: Create python directory
+  file:
+   path: "{{ python.root_dir }}"
+   state: directory
+
+## Prepare work directory for python
+- name: Create work directory for python
+  file:
+    path: "{{ python.work_dir }}"
+    state: directory
+
+## Install Python
+- name: Unarchive python archive file
+  unarchive:
+    src: "{{ python.archive }}"
+    dest: "{{ python.work_dir }}"
+  args:
+    creates: "{{ python.work_dir2 }}"
+  register: result_unarchive
+
+- name: Configure before make for python
+  command: ./configure CFLAGS=-fPIC --enable-shared --prefix={{ python.root_dir }}
+  args:
+    chdir: "{{ python.work_dir2 }}"
+  when: result_unarchive.changed
+
+- name: Make python
+  command: make
+  args:
+    chdir: "{{ python.work_dir2 }}"
+  when: result_unarchive.changed
+
+- name: Make install python
+  command: make install
+  args:
+    chdir: "{{ python.work_dir2 }}"
+  when: result_unarchive.changed
+
+## Create symbolic link for python
+- name: Create symbolic link for python3
+  file:
+   path: "{{ python.slink_python3 }}"
+   src: "{{ python.python }}"
+   state: link
+
+- name: Create symbolic link for pip
+  file:
+   path: "{{ python.slink_pip }}"
+   src: "{{ python.pip }}"
+   state: link
+
+- name: Create symbolic link for lib
+  file:
+   path: "{{ python.slink_lib }}"
+   src: "{{ python.lib }}"
+   state: link
+

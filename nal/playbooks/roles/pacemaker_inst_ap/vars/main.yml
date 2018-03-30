@@ -1,0 +1,4 @@
+---
+conf_root: /etc/corosync
+conf_file: "{{ conf_root }}/corosync.conf"
+auth_file: /etc/corosync/authkey

@@ -1,0 +1,24 @@
+---
+- hosts : nalapservers
+  vars_files:
+    - ../group_vars/all/nalapservers.yml
+  become: yes
+  roles :
+    - selinux
+    - hosts
+    - nfsmount
+    - expect
+    - pexpect
+    - apache
+    - apache_ap
+    - python
+    - php
+    - mariadb_ap
+    - jobscheduler
+    - nal_api
+    - nal_job
+    - nal_nwa
+    - pacemaker_inst_ap
+    - pacemaker_ap
+    - logrotate
+

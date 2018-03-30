@@ -1,0 +1,45 @@
+---
+- name: Install mysql-connector-java
+  yum:
+    name: "{{ item.name }}"
+    state: "{{ item.state }}"
+  with_items:
+    - name: mysql-connector-java
+      state: latest
+
+- name: Create work directory for install
+  file:
+    path: "{{ jobscheduler.work_dir }}"
+    state: directory
+
+## Unarchive JobScheduler
+- name: Unarchive JobScheduler archive file
+  unarchive:
+    src: "{{ jobscheduler.archive }}"
+    dest: "{{ jobscheduler.work_dir }}"
+  args:
+    creates: "{{ jobscheduler.install_param_file }}"
+  register: result_unarchive
+
+- name: Backup jobscheduler_install.xml
+  command: |
+    cp -p
+    {{ jobscheduler.install_param_file }}
+    {{ jobscheduler.install_param_file }}.org
+  args:
+    creates: "{{ jobscheduler.install_param_file }}.org"
+    removes: "{{ jobscheduler.install_param_file }}"
+  when: result_unarchive.changed
+
+- name: Create jobscheduler_install.xml
+  template:
+    src: jobscheduler_install.xml.j2
+    dest: "{{ jobscheduler.install_param_file }}"
+
+- name: Create app root directory
+  file:
+    path: "{{ jobscheduler.app_dir }}"
+    state: directory
+    owner: "{{ job_user.name }}"
+    group: "{{ job_user.group }}"
+

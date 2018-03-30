@@ -1,0 +1,30 @@
+127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4
+::1         localhost localhost.localdomain localhost6 localhost6.localdomain6
+
+{% if server_type == 'lb' %}
+{% for host in nal.lb.nodes %}
+{{ host.svmng_ip }} {{ host.name }}
+{% endfor %}
+{{ nal.lb.fip.ip }} {{ nal.lb.fip.name }}
+{% endif %}
+{% if server_type == 'web' %}
+{% for host in nal.web.nodes %}
+{{ host.svmng_ip }} {{ host.name }}
+{% endfor %}
+{% endif %}
+{% if server_type == 'ap' %}
+{% for host in nal.ap.nodes %}
+{{ host.svmng_ip }} {{ host.name }}
+{% endfor %}
+{{ nal.ap.fip.ip }} {{ nal.ap.fip.name }}
+{% endif %}
+{% if server_type == 'db' %}
+{% for host in nal.db.nodes %}
+{{ host.svmng_ip }} {{ host.name }}
+{% endfor %}
+{{ nal.db.fip.ip }} {{ nal.db.fip.name }}
+{% endif %}
+
+
+
+

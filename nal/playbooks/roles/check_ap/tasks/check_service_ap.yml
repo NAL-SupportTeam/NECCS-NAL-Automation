@@ -1,0 +1,8 @@
+---
+- name: <AP> Check Service
+  shell: |
+    systemctl status {{ item }} | grep "^   Active: active"
+  changed_when: false
+  with_items:
+    - firewalld
+    - rpcbind

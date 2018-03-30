@@ -1,0 +1,27 @@
+---
+- name: Backup rsyslog.conf
+  command: |
+    cp -p
+    /etc/rsyslog.conf
+    /etc/rsyslog.conf.org
+  args:
+    creates: /etc/rsyslog.conf.org
+    removes: /etc/rsyslog.conf
+  register: result
+
+- name: Create rsyslog.conf
+  copy:
+    src: rsyslog.conf
+    dest: /etc/rsyslog.conf
+  when: result.changed
+
+- name: Restart rsyslog
+  service:
+    name: "{{ item.name }}"
+    state: "{{ item.state }}"
+    enabled: "{{ item.enabled }}"
+  with_items:
+    - name: rsyslog
+      state: restarted
+      enabled: yes
+  when: result.changed

@@ -1,0 +1,69 @@
+---
+- name: Set password of root user
+  shell: |
+    mysql -h localhost -e "set password for 'root'@'localhost'=password('i-portal');"
+  ignore_errors: yes
+
+- name: Check existing database
+  shell: |
+    mysql -h localhost -pi-portal -e "show databases;" | grep nal
+  register: result_database
+  changed_when: false
+  ignore_errors: yes
+
+- name: Create database
+  shell: |
+    mysql -h localhost -pi-portal -e "create database nal;"
+  when: result_database.stdout == ""
+
+- name: Check existing nal tables
+  shell: |
+    mysql -h localhost -pi-portal -D nal -e "show tables;" | grep WIM_DEVICE_ENDPOINT_MNG
+  register: result_table
+  changed_when: false
+  ignore_errors: yes
+
+#- name: Create script file to create tables
+#  shell: |
+#    grep "source create_" createTbl_and_insertDate.sql > create_table.sql
+#  args:
+#    chdir: /var/www/html/sql
+#  when: result_table.stdout == ""
+
+- name: Create tables
+  shell: |
+    mysql -h localhost -pi-portal -D nal -e "source create_table.sql"
+  args:
+    chdir: /var/www/html/sql
+  when: result_table.stdout == ""
+
+- name: Check existing initial paramater files
+  stat:
+    path: /var/www/html/template
+  changed_when: false
+  register: result_template
+
+- name: Set initial parameter files
+  unarchive:
+    src: nal-template.tar.gz
+    dest: /var/www/html/
+  when: result_template.stat.exists == false
+
+#- name: Copy script to convert format
+#  shell: |
+#    cp /var/www/html/sql/nalescapejson.pl /var/www/html/template
+#  when: result_template.stat.exists == false
+
+- name: Convert format
+  shell: /bin/sh ./nalescapejson.sh
+  args:
+    chdir: /var/www/html/template
+  when: result_template.stat.exists == false
+
+- name: Insert initial parameter
+  shell: |
+    mysql -h localhost -pi-portal -D nal -e "source init_insert-data.sql"
+  args:
+    chdir: /var/www/html/template
+  when: result_template.stat.exists == false
+

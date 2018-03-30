@@ -1,0 +1,14 @@
+[Unit]
+Description=JobScheduler
+
+[Service]
+ExecStart={{ jobscheduler.app_dir }}/{{ inventory_hostname }}/bin/jobscheduler.sh start
+ExecStop={{ jobscheduler.app_dir }}/{{ inventory_hostname }}/bin/jobscheduler.sh stop
+ExecReload={{ jobscheduler.app_dir }}/{{ inventory_hostname }}/bin/jobscheduler.sh restart
+Type=forking
+PIDFile=/home/{{ job_user.name }}/jobscheduler/{{ inventory_hostname }}/logs/scheduler.pid
+User={{ job_user.name }}
+Group={{ job_user.group }}
+
+[Install]
+WantedBy=multi-user.target
