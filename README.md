@@ -1,9 +1,9 @@
-# Network Automation Layer (NAL)
+# Network Automation Layer (NAL) Auto Setup Tool
 
 ## Overview
-Requests are received from external functions such as portals, and processing to appropriate external functions is issued in response to requests. Deployment and provisioning of network resources and configuration management/resource management of network functions by linking with external functions.
+This tool is AutoSetup Tool of NAL.
 
-By collaborating with OpenMSA, NAL expands its function as MANO (Management and Network Orchestration).
+The tool is based on Ansible and Selenium.
 
 ## Installation and Usage
 Under construction.
