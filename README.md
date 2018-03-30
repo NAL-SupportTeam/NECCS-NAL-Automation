@@ -1,7 +1,7 @@
 # Network Automation Layer (NAL) Auto Setup Tool
 
 ## Overview
-This tool is AutoSetup Tool of NAL.
+This tools is Automation tools for NAL. Installation and Test.
 
 The tool is based on Ansible and Selenium.
 
