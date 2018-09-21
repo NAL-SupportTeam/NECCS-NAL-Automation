@@ -9,8 +9,8 @@ The tool is based on Ansible and Selenium.
 The procedures described in this document will show how to setup NAL on a single DC using the NAL-Automation Tool.
 In case NAL is planned to be deployed on multiple DC, please contact NAL Support Team (via community forum).
 
-■ REQUIREMENTS 
-### 1)  An Ansible Controller Node
+### ■ REQUIREMENTS 
+1)  An Ansible Controller Node
 
 Setup and installation of Ansible is not covered in this document.
 Please prepare it in advance.
@@ -29,8 +29,8 @@ Recommended VM Configuration:
 
 ![Alt text](images/configuration.png)
 
-■ PREPARATION
-1) In the Ansible Controller Node
+### ■ PREPARATION
+#### 1) In the Ansible Controller Node
 
 1-1) It is confirmed that the Ansible Controller Node is able to connect to the NAL VMs.
 
@@ -96,7 +96,7 @@ $ cp –f nal-template.tar.gz ~/nal/playbooks/roles/nal_initdb/files/.
 $ cd ~/nal/playbooks/roles/nal_nwa/files/
 $ scp –p root@<MSO IP Address>:/root/.ssh/id_rsa.pub id_rsa_msa_to_intersec.pub
 ```
-   _NOTE: If MSO public key does not exists, create one._
+   _*NOTE*: If MSO public key does not exists, create one._
    
 1-7) Get the <userID> of the Ansible User
 ```
@@ -110,7 +110,85 @@ ansible:x:1001:1001::/home/ansible:/bin/bash
 # cat id_rsa.pub
 ```
 
-### 2. NAL Components
+#### 2. NAL Components
 On each NAL Component VM, perform the following steps
 
-2-1) 
+2-1) Create ansible user (if not exists)
+`# useradd -d /home/ansible -m ansible -u <userID>`
+
+2-2) Add the public key of the “Ansible Controller” Node to the ansible user ssh authorized_keys
+```
+# su – ansible
+$ mkdir ~/.ssh                    ## create if it does not exists
+$ chmod 700 ~/.ssh
+$ cd ~/.ssh
+$ vi authorized_keys
+          <append the public key of the “Ansible Controller Node”>
+$ chmod 600 authorized_keys
+```
+
+2-3) Add sudo execution rights. Skip if definition already exists.
+```
+# vi sudo
+…
+ansible ALL=(ALL)       NOPASSWD:ALL               ## add this line
+```
+
+2-4) Update SSH Settings
+```
+# vi /etc/ssh/sshd_config
+…
+RSAAuthentication yes
+PubkeyAuthentication yes
+…
+# systemctl restart sshd
+```
+
+2-5) Generate the authentication keys for each NAL component server pair. <br/>
+Run the following commands on each #1 node.
+```
+# ssh-keygen -t rsa
+Generating public/private rsa key pair.
+Enter file in which to save the key (/root/.ssh/id_rsa):      <Press the enter key>
+Enter passphrase (empty for no passphrase):                   <Press the enter key>
+Enter same passphrase again:                                  <Press the enter key>
+Your identification has been saved in /root/.ssh/id_rsa.
+Your public key has been saved in /root/.ssh/id_rsa.pub.
+...
+# ssh-copy-id -i ~/.ssh/id_rsa.pub root@<NAL XX#2>
+```
+
+#### 3. Check the connection
+Check if SSH connection using the public key is possible
+
+3-1) Between "Ansible Controller Node" and NAL Component VMs
+```
+# su - ansible
+$ ssh -i ~/.ssh/id_rsa ansible@<NAL VM SVmng IP Address>
+```
+
+3-2) Between NAL Server Pairs
+`# ssh -i ~/.ssh/id_rsa root@<SVmng IP Address of #2>`
+
+_*Note:* These steps are required. A confirmation prompt is displayed during initial connection. The tool may not work properly if input is requested during operation._
+
+### ■ Installation
+
+1	Run the installation tool. <br/>
+Login to the ansible controller node and run the tool
+```
+# su – ansible
+$ cd /home/ansible/nal
+$ sh ./setup.sh 
+```
+
+2	Check the status using ansible.
+```
+$ cd /home/ansible/nal
+$ sh ./unittest.sh
+```
+
+Logs can be found in /home/ansible/nal/logs/ directory.
+If errors are encountered during operation, please check the logs and rerun the script after fixing the cause.
+
+
