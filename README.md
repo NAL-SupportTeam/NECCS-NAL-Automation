@@ -24,6 +24,6 @@ Recommended VM Configuration:
 
 3)  NAL Parameters (TODO)
 
-■ Network Configuration
+■ NETWORK CONFIGURATION
 
 ![Alt text](images/configuration.png)
