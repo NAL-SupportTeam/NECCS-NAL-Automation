@@ -27,3 +27,14 @@ Recommended VM Configuration:
 ■ NETWORK CONFIGURATION
 
 ![Alt text](images/configuration.png)
+
+■ PREPARATION
+1) In the Ansible Controller Node
+
+1-1) It is confirmed that the Ansible Controller Node is able to connect to the NAL VMs.
+
+1-2) Download the installation tool to the ansible home directory (/home/ansible)
+
+`# git clone https://github.com/NAL-SupportTeam/NECCS-NAL-Automation.git /home/ansible`
+`# cd /home/ansible`
+`# chown -R ansible:ansible nal`
