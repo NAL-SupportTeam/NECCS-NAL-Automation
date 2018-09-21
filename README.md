@@ -10,7 +10,7 @@ The procedures described in this document will show how to setup NAL on a single
 In case NAL is planned to be deployed on multiple DC, please contact NAL Support Team (via community forum).
 
 ■ REQUIREMENTS 
-1)  An Ansible Controller Node
+### 1)  An Ansible Controller Node
 
 Setup and installation of Ansible is not covered in this document.
 Please prepare it in advance.
@@ -96,9 +96,21 @@ $ cp –f nal-template.tar.gz ~/nal/playbooks/roles/nal_initdb/files/.
 $ cd ~/nal/playbooks/roles/nal_nwa/files/
 $ scp –p root@<MSO IP Address>:/root/.ssh/id_rsa.pub id_rsa_msa_to_intersec.pub
 ```
-   *NOTE: If MSO public key does not exists, create one. 
+   _NOTE: If MSO public key does not exists, create one._
    
 1-7) Get the <userID> of the Ansible User
 ```
 # grep ansible /etc/passwd
 ansible:x:1001:1001::/home/ansible:/bin/bash
+```
+
+1-8) Get the public key of the “Ansible Controller” Node
+```
+# cd /home/ansible/.ssh
+# cat id_rsa.pub
+```
+
+### 2. NAL Components
+On each NAL Component VM, perform the following steps
+
+2-1) 
