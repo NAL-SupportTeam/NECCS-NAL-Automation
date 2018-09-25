@@ -19,13 +19,19 @@ Setup and installation of **Ansible** is not covered in this document.
 Setup and installation of the **NFS Server** is not covered in this document.
 </br>Please prepare it in advance.
 
-#### (3) 10 VMs for the NAL Components
+#### (3) OpenMSA 
+
+Setup and installation of the **OpenMSA** is not covered in this document. Please refer to the [OpenMSA Installation Guide](https://www.openmsa.co/documentation/getting-started-with-the-openmsa-freeware/)
+</br>Please prepare it in advance.
+
+#### (4) 10 VMs for the NAL Components
 
 Recommended VM Configuration:
 
 ![Alt text](images/required_vm_specs.png)
 
 ※This component of NAL is installed in a machine where OpenStack Horizon exists. Please install and configure OpenStack Horizon beforehand.
+   
    
 ■ NETWORK CONFIGURATION
 
@@ -183,6 +189,7 @@ $ ssh -i ~/.ssh/id_rsa ansible@<NAL VM SVmng IP Address>
 
 _**Note:** A confirmation prompt is displayed during SSH initial connection. The tool may not work properly if input is requested during installation. Please make sure to run these steps._
 
+
 ### ■ INSTALLATION
 #### (1)	Run the installation tool. 
 Login to the ansible controller node and run the tool
@@ -191,7 +198,6 @@ Login to the ansible controller node and run the tool
 $ cd /home/ansible/nal
 $ sh ./setup.sh 
 ```
-
 #### (2)	Check the status using ansible.
 ```
 $ cd /home/ansible/nal
