@@ -29,7 +29,7 @@ Recommended VM Configuration:
    
 ■ NETWORK CONFIGURATION
 
-![Alt text](images/network_config.png)
+![Alt text](images/network_configuration.png)
 
 **Notes:**
 </br> - This guide covers the automated installation and configuration of the components in the red box using ansible.
@@ -100,13 +100,13 @@ $ tar -zcvf nal-template.tar.gz template
 $ cp –f nal-template.tar.gz ~/nal/playbooks/roles/nal_initdb/files/.
 ```
 
-1-5 Replace the MSO public key 
+1-5 Replace the OpenMSA public key 
 ```
 # su – ansible
 $ cd ~/nal/playbooks/roles/nal_nwa/files/
-$ scp –p root@<MSO IP Address>:/root/.ssh/id_rsa.pub id_rsa_msa_to_intersec.pub
+$ scp –p root@<OpenMSA IP Address>:/root/.ssh/id_rsa.pub id_rsa_msa_to_intersec.pub
 ```
-   _**NOTE**: If MSO public key does not exists, please create one._
+   _**NOTE**: If OpenMSA public key does not exists, please create one._
    
 1-6 Get the `<userID>` of the Ansible User
 ```
