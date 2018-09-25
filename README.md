@@ -1,7 +1,7 @@
 # Network Automation Layer (NAL) Auto Setup Tool
 
 ## Overview
-These are automation tools for NAL installaion and testing.
+These are the automation tools for NAL installation and testing.
 
 This tool is based on Ansible and Selenium.
 
@@ -9,17 +9,17 @@ This tool is based on Ansible and Selenium.
 This guide will cover the installation and configuration of NAL using the NAL-Automation Tool.
 
 ### ■ REQUIREMENTS 
-1)  An Ansible Controller Node
+#### (1)  An Ansible Controller Node
 
 Setup and installation of **Ansible** is not covered in this document.
 </br>Please prepare it in advance.
 
-2) An NFS Server 
+#### (2) An NFS Server 
 
 Setup and installation of the **NFS Server** is not covered in this document.
 </br>Please prepare it in advance.
 
-3) 10 VMs for NAL Components
+#### (3) 10 VMs for the NAL Components
 
 Recommended VM Configuration:
 
@@ -29,11 +29,11 @@ Recommended VM Configuration:
    
 ■ NETWORK CONFIGURATION
 
-![Alt text](images/network_configuration.png)
+![Alt text](images/network_config.png)
 
 **Notes:**
 </br> - This guide covers the automated installation and configuration of the components in the red box using the ansible.
-</br> - For networks, a single or multiple networks can be used for each network connectivity.
+</br> - For networks, a single or multiple networks can be used for each network connection.
 
 ### ■ PREPARATION
 #### (1) An Ansible Controller Node. Configured and is connected to the `SVmng` network.
@@ -99,6 +99,7 @@ $ cd /tmp
 $ tar -zcvf nal-template.tar.gz template
 $ cp –f nal-template.tar.gz ~/nal/playbooks/roles/nal_initdb/files/.
 ```
+
 1-5 Replace the MSO public key 
 ```
 # su – ansible
@@ -113,7 +114,7 @@ $ scp –p root@<MSO IP Address>:/root/.ssh/id_rsa.pub id_rsa_msa_to_intersec.pu
 ansible:x:1001:1001::/home/ansible:/bin/bash
 ```
 
-1-7) Get the public key of the “Ansible Controller” Node
+1-7 Get the public key of the “Ansible Controller” Node
 ```
 # cd /home/ansible/.ssh
 # cat id_rsa.pub
@@ -179,11 +180,10 @@ $ ssh -i ~/.ssh/id_rsa ansible@<NAL VM SVmng IP Address>
 5-2 Between NAL Server Pairs
 `# ssh -i ~/.ssh/id_rsa root@<SVmng IP Address of #2>`
 
-_**Note:** A confirmation prompt is displayed during initial connection. The tool may not work properly if input is requested during operation. Please make sure to run these steps._
+_**Note:** A confirmation prompt is displayed during SSH initial connection. The tool may not work properly if input is requested during installation. Please make sure to run these steps._
 
 ### ■ Installation
-
-#### (1)	Run the installation tool. <br/>
+#### (1)	Run the installation tool. 
 Login to the ansible controller node and run the tool
 ```
 # su – ansible
@@ -197,5 +197,5 @@ $ cd /home/ansible/nal
 $ sh ./unittest.sh
 ```
 
-Logs can be found in /home/ansible/nal/logs/ directory.
+Logs can be found in `/home/ansible/nal/logs/` directory.
 If errors are encountered during operation, please check the logs and rerun the script after fixing the cause.
