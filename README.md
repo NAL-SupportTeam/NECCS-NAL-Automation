@@ -55,7 +55,7 @@ Recommended VM Configuration:
 4-2 Using an editor, update the inventory source file according to NAL parameters
 ```
 # su – ansible
-$ vi /home/ansible/nal/hosts.ini</pre>
+$ vi /home/ansible/nal/hosts.ini
 ```
 ```ini
 [nallbservers]
