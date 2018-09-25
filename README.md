@@ -28,7 +28,7 @@ Setup and installation of the **OpenMSA** is not covered in this document. Pleas
 
 Recommended VM Configuration:
 
-![Alt text](images/required_vm_specs.png)
+![Alt text](images/vm_specs.png)
 
 ※This component of NAL is installed in a machine where OpenStack Horizon exists. Please install and configure OpenStack Horizon beforehand.
    
