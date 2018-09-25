@@ -177,8 +177,8 @@ Check if SSH connection using the public key is possible
 # su - ansible
 $ ssh -i ~/.ssh/id_rsa ansible@<NAL VM SVmng IP Address>
 ```
-
 5-2 Between NAL Server Pairs
+
 `# ssh -i ~/.ssh/id_rsa root@<SVmng IP Address of #2>`
 
 _**Note:** A confirmation prompt is displayed during SSH initial connection. The tool may not work properly if input is requested during installation. Please make sure to run these steps._
