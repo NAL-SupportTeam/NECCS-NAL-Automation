@@ -113,7 +113,7 @@ $ scp –p root@<MSO IP Address>:/root/.ssh/id_rsa.pub id_rsa_msa_to_intersec.pu
 # grep ansible /etc/passwd
 ansible:x:1001:1001::/home/ansible:/bin/bash
 ```
-</br> The response is delimited by a colon `:`. <userID> is the 3rd value from the left.
+The response is delimited by a colon `:`. <userID> is the 3rd value from the left.
 
 1-7 Get the public key of the “Ansible Controller” Node
 ```
@@ -183,7 +183,7 @@ $ ssh -i ~/.ssh/id_rsa ansible@<NAL VM SVmng IP Address>
 
 _**Note:** A confirmation prompt is displayed during SSH initial connection. The tool may not work properly if input is requested during installation. Please make sure to run these steps._
 
-### ■ Installation
+### ■ INSTALLATION
 #### (1)	Run the installation tool. 
 Login to the ansible controller node and run the tool
 ```
