@@ -25,14 +25,14 @@ Recommended VM Configuration:
 
 ![Alt text](images/required_vm_specs.png)
 
-※This component of NAL is installed in a machine where OpenStack Horizon exists. Please install and configuration OpenStack Horizon beforehand.
+※This component of NAL is installed in a machine where OpenStack Horizon exists. Please install and configure OpenStack Horizon beforehand.
    
 ■ NETWORK CONFIGURATION
 
 ![Alt text](images/network_config.png)
 
 **Notes:**
-</br> - This guide covers the automated installation and configuration of the components in the red box using the ansible.
+</br> - This guide covers the automated installation and configuration of the components in the red box using ansible.
 </br> - For networks, a single or multiple networks can be used for each network connection.
 
 ### ■ PREPARATION
@@ -88,12 +88,12 @@ $ cp –p ~/nal/playbooks/roles/nal_initdb/files/nal-template.tar.gz /tmp/wk.tar
 $ cd /tmp
 $ tar zxvf wk.tar.gz
 ```
-</br>1-4-2 Update the values in the following files according to the target configuration settings.
+1-4-2 Update the values in the following files according to the target configuration settings.
 ```
 /tmp/template/init_NAL_*.sql
 /tmp/template/init_WIM_*.sql
 ```
-</br>1-4-3 Create an archive with the updated files and replace the initial data archive for NAL DB with this one.
+1-4-3 Create an archive with the updated files and replace the initial data archive for NAL DB with this one.
 ```
 $ cd /tmp
 $ tar -zcvf nal-template.tar.gz template
@@ -108,11 +108,12 @@ $ scp –p root@<MSO IP Address>:/root/.ssh/id_rsa.pub id_rsa_msa_to_intersec.pu
 ```
    _**NOTE**: If MSO public key does not exists, please create one._
    
-1-6 Get the <userID> of the Ansible User
+1-6 Get the `<userID>` of the Ansible User
 ```
 # grep ansible /etc/passwd
 ansible:x:1001:1001::/home/ansible:/bin/bash
 ```
+</br> The response is delimited by a colon `:`. <userID> is the 3rd value from the left.
 
 1-7 Get the public key of the “Ansible Controller” Node
 ```
