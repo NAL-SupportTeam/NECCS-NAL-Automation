@@ -129,8 +129,10 @@ The response is delimited by a colon `:`. <userID> is the 3rd value from the lef
 On each NAL Component VM, perform the following steps
 
 5-1 Create ansible user (if not exists)
+
 `# useradd -d /home/ansible -m ansible -u <userID>`
-</br>5-2 Add the public key of the “Ansible Controller” Node to the ssh authorized_keys of the `ansible` user.
+
+5-2 Add the public key of the “Ansible Controller” Node to the ssh authorized_keys of the `ansible` user.
 ```
 # su – ansible
 $ mkdir ~/.ssh                    ## create if it does not exists
