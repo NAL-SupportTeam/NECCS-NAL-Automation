@@ -19,15 +19,17 @@ Please prepare it in advance.
 
 Recommended VM Configuration:
 
-![Alt text](images/vm_specs.png)
-   
-※Number of CPUs allocated using KVM in an environment using Hyper-Threading, two Intel Xeon processors E5-2660v3 (2.6 GHz)
+![Alt text](images/required_vm_specs.png)
 
+※This component of NAL is installed in a machine where OpenStack Horizon exists.
+   
 3)  NAL Parameters (TODO)
 
 ■ NETWORK CONFIGURATION
 
-![Alt text](images/configuration.png)
+![Alt text](images/network_configuration.png)
+
+※This guide covers the automated installation and configuration of the components in the red box using ansible.
 
 ### ■ PREPARATION
 #### 1) In the Ansible Controller Node
