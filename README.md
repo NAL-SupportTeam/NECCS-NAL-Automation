@@ -1,7 +1,7 @@
 # Network Automation Layer (NAL) Auto Setup Tool
 
 ## Overview
-These are the automation tools for NAL installation and testing.
+This is the automation tool for NAL installation and testing.
 
 This tool is based on Ansible and Selenium.
 
@@ -11,17 +11,17 @@ This guide will cover the installation and configuration of NAL using the NAL-Au
 ### ■ REQUIREMENTS 
 #### (1)  An Ansible Controller Node
 
-Setup and installation of **Ansible** is not covered in this document.
+Setup and installation of **Ansible** are not covered in this document.
 </br>Please prepare it in advance.
 
 #### (2) An NFS Server 
 
-Setup and installation of the **NFS Server** is not covered in this document.
+Setup and installation of the **NFS Server** are not covered in this document.
 </br>Please prepare it in advance.
 
 #### (3) OpenMSA 
 
-Setup and installation of the **OpenMSA** is not covered in this document. Please refer to the [OpenMSA Installation Guide](https://www.openmsa.co/documentation/getting-started-with-the-openmsa-freeware/)
+Setup and installation of the **OpenMSA** are not covered in this document. Please refer to the [OpenMSA Installation Guide](https://www.openmsa.co/documentation/getting-started-with-the-openmsa-freeware/)
 </br>Please prepare it in advance.
 
 #### (4) 10 VMs for the NAL Components
@@ -30,7 +30,7 @@ Recommended VM Configuration:
 
 ![Alt text](images/vm_specs.png)
 
-※This component of NAL is installed in a machine where OpenStack Horizon exists. Please install and configure OpenStack Horizon beforehand.
+※ `NAL Portal` is installed in a machine where OpenStack Horizon exists. Please install and configure OpenStack Horizon beforehand.
    
    
 ■ NETWORK CONFIGURATION
@@ -38,25 +38,28 @@ Recommended VM Configuration:
 ![Alt text](images/network_configuration.png)
 
 **Notes:**
-</br> - This guide covers the automated installation and configuration of the components in the red box using ansible.
+</br> - This guide covers the automated installation and configuration of the components in ![Alt text](images/box.png) using ansible.
 </br> - For networks, a single or multiple networks can be used for each network connection.
 
 ### ■ PREPARATION
-#### (1) An Ansible Controller Node. Configured and is connected to the `SVmng` network.
-#### (2) An NFS Server. Configured and is connected to the `storage` network.
-#### (3) OpenMSA. Configured and is connected to the `SVmng` network.
-#### (4) On the Ansible Controller Node, perform the following.
-4-1 Download the NAL-Automation tool to the ansible home directory (/home/ansible)
+#### (1) An Ansible Controller Node, already configured and connected to the `SVmng` network.
+#### (2) An NFS Server, already configured and connected to the `storage` network.
+#### (3) An OpenMSA, already configured and connected to the `SVmng` network.
+#### (4) In the Ansible Controller Node, perform the following.
+4-1 Download the NAL-Automation tool to the `ansible` home directory (/home/ansible)
 ```
 # git clone https://github.com/NAL-SupportTeam/NECCS-NAL-Automation.git /home/ansible
 # cd /home/ansible
 # chown -R ansible:ansible nal
 ```
-4-2 Using an editor, update the inventory source file according to NAL parameters
-```
-# su – ansible
-$ vi /home/ansible/nal/hosts.ini
-```
+
+4-2 Switch to `ansible` user.
+
+`# su - ansible`
+
+4-3 Update the inventory source file according to the target configuration.
+
+`$ vi /home/ansible/nal/hosts.ini`
 ```ini
 [nallbservers]
 <NAL Web-LB #1 Hostname> ansible_host=<NAL Web-LB #1 IP Address for SVmng> is_first_active_node=active  index=0
@@ -79,76 +82,77 @@ $ vi /home/ansible/nal/hosts.ini
 <NAL Portal #2 Hostname> ansible_host=<NAL Portal #2 IP Address for SVmng>  is_first_active_node=active  index=1
 ...
   ```
-4-3 Using an editor, update the ansible configuration file according to the target configuration settings.
+4-4 Update the ansible configuration file according to the target configuration settings.
+
+`$ vi /home/ansible/nal/group_vars/all/common.yml`
+
+4-5 Update the initial data for NAL DB
+
+4-5-1 Copy and extract the initial data archive for NAL DB into an arbitrary directory.
 ```
-# su – ansible
-$ vi /home/ansible/nal/group_vars/all/common.yml
-```
-4-4 Update the initial data for NAL DB
-</br>4-4-1 Copy and extract the initial data archive for NAL DB into an arbitrary directory.
-```
-# su – ansible
 $ cp –p ~/nal/playbooks/roles/nal_initdb/files/nal-template.tar.gz /tmp/wk.tar.gz
 $ cd /tmp
 $ tar zxvf wk.tar.gz
 ```
-4-4-2 Update the values in the following files according to the target configuration settings.
+4-5-2 Update the values in the following files according to the target configuration settings.
 ```
 /tmp/template/init_NAL_*.sql
 /tmp/template/init_WIM_*.sql
 ```
-4-4-3 Create an archive with the updated files and replace the initial data archive for NAL DB with this one.
+4-5-3 Create an archive with the updated files and replace the initial data archive for NAL DB with this one.
 ```
 $ cd /tmp
 $ tar -zcvf nal-template.tar.gz template
 $ cp –f nal-template.tar.gz ~/nal/playbooks/roles/nal_initdb/files/.
 ```
 
-4-5 Replace the OpenMSA public key 
+4-6 Replace the OpenMSA public key 
 ```
-# su – ansible
 $ cd ~/nal/playbooks/roles/nal_nwa/files/
 $ scp –p root@<OpenMSA IP Address>:/root/.ssh/id_rsa.pub id_rsa_msa_to_intersec.pub
 ```
-   _**NOTE**: If OpenMSA public key does not exists, please create one._
+   _**NOTE**: If the OpenMSA public key does not exists, please create one._
    
-4-6 Get the `<userID>` of the Ansible User
+4-7 Get the `<userID>` (UID) of the Ansible User
 ```
-# grep ansible /etc/passwd
+$ grep ansible /etc/passwd
 ansible:x:1001:1001::/home/ansible:/bin/bash
 ```
-The response is delimited by a colon `:`. <userID> is the 3rd value from the left.
+The response is delimited by a colon `:`. It is the 3rd value from the left.
 
-4-7 Get the public key of the “Ansible Controller” Node
+4-8 Get the public key of the “Ansible Controller” Node
 ```
-# cd /home/ansible/.ssh
-# cat id_rsa.pub
+$ cd /home/ansible/.ssh
+$ cat id_rsa.pub
 ```
 
 #### (5) NAL Components
 On each NAL Component VM, perform the following steps
 
-5-1 Create ansible user (if not exists)
+5-1 Login as root and create the `ansible` user (_if it does not exist yet_)
 
 `# useradd -d /home/ansible -m ansible -u <userID>`
 
-5-2 Add the public key of the “Ansible Controller” Node to the ssh authorized_keys of the `ansible` user.
+**NOTE:** `<userID>` is the value retrieved from step 4-7.
+
+5-2 Append the public key of the "Ansible Controller Node" to the ssh authorized_keys of the `ansible` user.
 ```
 # su – ansible
-$ mkdir ~/.ssh                    ## create if it does not exists
+$ mkdir ~/.ssh                                                     ## create if it does not exist yet
 $ chmod 700 ~/.ssh
 $ cd ~/.ssh
 $ vi authorized_keys
-          <append the public key of the “Ansible Controller Node”>
+          <append the public key of the "Ansible Controller Node">
 $ chmod 600 authorized_keys
+$ exit
 ```
-5-3 Add `sudo` execution rights. Skip if definition already exists.
+5-3 Add `sudo` execution rights. Skip if the definition already exists.
 ```
-# vi sudo
+# visudo
 …
 ansible ALL=(ALL)       NOPASSWD:ALL               ## add this line
 ```
-5-4 Update SSH Settings
+5-4 Update the SSH Settings as shown below.
 ```
 # vi /etc/ssh/sshd_config
 …
@@ -157,29 +161,32 @@ PubkeyAuthentication yes
 …
 # systemctl restart sshd
 ```
-5-5 Generate the authentication keys for each NAL component server pair. <br/>
-Run the following commands on each #1 node.
+5-5 Generate the authentication key for each NAL component server pair. 
+
+5-5-1 Run the following commands on each VM#1 node.
 ```
 # ssh-keygen -t rsa
 Generating public/private rsa key pair.
-Enter file in which to save the key (/root/.ssh/id_rsa):      <Press the enter key>
-Enter passphrase (empty for no passphrase):                   <Press the enter key>
-Enter same passphrase again:                                  <Press the enter key>
+Enter file in which to save the key (/root/.ssh/id_rsa):           ##Press the enter key
+Enter passphrase (empty for no passphrase):                        ##Press the enter key
+Enter same passphrase again:                                       ##Press the enter key
 Your identification has been saved in /root/.ssh/id_rsa.
 Your public key has been saved in /root/.ssh/id_rsa.pub.
 ...
-# ssh-copy-id -i ~/.ssh/id_rsa.pub root@<NAL XX#2>
 ```
+5-5-2 Copy the public key to the pair node - `VM#2`.
+
+`# ssh-copy-id -i ~/.ssh/id_rsa.pub root@<NAL XX#2>`
 
 #### (6) Check the connection
 Check if SSH connection using the public key is possible
 
-6-1 Between "Ansible Controller Node" and NAL Component VMs
+6-1 Login to the "Ansible Controller Node and check the connection to each of the NAL Component VMs.
 ```
 # su - ansible
 $ ssh -i ~/.ssh/id_rsa ansible@<NAL VM SVmng IP Address>
 ```
-6-2 Between NAL Server Pairs
+6-2 For each NAL Component, login to NAL #1 VM and check the connection to NAL #2 VM.
 
 `# ssh -i ~/.ssh/id_rsa root@<SVmng IP Address of #2>`
 
