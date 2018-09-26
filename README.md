@@ -191,7 +191,7 @@ $ ssh -i ~/.ssh/id_rsa ansible@<NAL VM SVmng IP Address>
 # ssh -i ~/.ssh/id_rsa root@<SVmng IP Address of #2>
 ```
 
-_**Note:** The tool connects to each target host via SSH using an authentication key. Since a confirmation prompt is displayed during SSH initial connection, make sure to run these steps. The tool may not work properly if in case input is requested during installation operation._
+_**Note:** Make to run these steps to prevent the confirmation prompt from displaying. The tool may not work properly if input is requested during installation operation._
 
 
 ### ■ INSTALLATION
