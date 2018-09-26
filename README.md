@@ -89,7 +89,7 @@ $ vi /home/ansible/nal/hosts.ini
 $ vi /home/ansible/nal/group_vars/all/common.yml
 ```
 
-4-5 Update the initial data for NAL DB
+4-5 Update the initial data for NAL DB.
 
 4-5-1 Copy and extract the initial data archive for NAL DB into an arbitrary directory.
 ```
@@ -109,14 +109,14 @@ $ tar -zcvf nal-template.tar.gz template
 $ cp –f nal-template.tar.gz ~/nal/playbooks/roles/nal_initdb/files/.
 ```
 
-4-6 Replace the OpenMSA public key 
+4-6 Replace the public key file for OpenMSA.
 ```
 $ cd ~/nal/playbooks/roles/nal_nwa/files/
 $ scp –p root@<OpenMSA IP Address>:/root/.ssh/id_rsa.pub id_rsa_msa_to_intersec.pub
 ```
    _**NOTE**: If the OpenMSA public key does not exist, please create one._
    
-4-7 Get the `<userID>` (UID) of the Ansible User
+4-7 Get the `<userID>` (UID) of the Ansible User.
 ```
 $ grep ansible /etc/passwd
 ansible:x:1001:1001::/home/ansible:/bin/bash
@@ -129,9 +129,7 @@ $ cd /home/ansible/.ssh
 $ cat id_rsa.pub
 ```
 
-#### (5) NAL Components
-On each NAL Component VM, perform the following steps
-
+#### (5) In each NAL Component VM, perform the following.
 5-1 Login as root and create the `ansible` user (_if it does not exist yet_)
 ```
 # useradd -d /home/ansible -m ansible -u <userID>
@@ -153,16 +151,16 @@ $ exit
 5-3 Add `sudo` execution rights. Skip if the definition already exists.
 ```
 # visudo
-…
+...
 ansible ALL=(ALL)       NOPASSWD:ALL                               ## add this line
 ```
 5-4 Update the SSH Settings as shown below.
 ```
 # vi /etc/ssh/sshd_config
-…
+...
 RSAAuthentication yes
 PubkeyAuthentication yes
-…
+...
 # systemctl restart sshd
 ```
 5-5 Generate the authentication key for each NAL component server pair. 
@@ -180,10 +178,10 @@ Your public key has been saved in /root/.ssh/id_rsa.pub.
 # ssh-copy-id -i ~/.ssh/id_rsa.pub root@<NAL XX#2>
 ```
 
-#### (6) Check the connection
+#### (6) Check the connection between VMs.
 Check if SSH connection using the public key is possible.
 
-6-1 Login to the "Ansible Controller Node and check the connection to each of the NAL Component VMs.
+6-1 Login to the "Ansible Controller Node" and check the connection to each of the NAL Component VMs.
 ```
 # su - ansible
 $ ssh -i ~/.ssh/id_rsa ansible@<NAL VM SVmng IP Address>
@@ -197,7 +195,7 @@ _**Note:** The tool connects to each target host via SSH using an authentication
 
 
 ### ■ INSTALLATION
-#### (1)	Run the installation tool. 
+#### (1)	Run the installation tool.
 Login to the "Ansible Controller Node" and run the tool
 ```
 # su – ansible
