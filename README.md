@@ -191,7 +191,7 @@ $ ssh -i ~/.ssh/id_rsa ansible@<NAL VM SVmng IP Address>
 # ssh -i ~/.ssh/id_rsa root@<SVmng IP Address of #2>
 ```
 
-_**Note:** Make to run these steps to prevent the confirmation prompt from displaying. The tool may not work properly if input is requested during installation operation._
+_**Note:** Make sure to run these steps to prevent the confirmation prompt from displaying. The tool may not work properly if input is requested during installation operation._
 
 
 ### ■ INSTALLATION
@@ -208,6 +208,6 @@ $ cd /home/ansible/nal
 $ sh ./unittest.sh
 ```
 
-If errors are encountered during operation, make sure that all preparatory steps were performed.</br>
+If errors are encountered during operation, verify that all the preparatory steps were performed.</br>
 Check the logs and rerun the script after fixing the cause.</br>
 Logs can be found in `/home/ansible/nal/logs/` directory.
