@@ -21,7 +21,7 @@ Setup and installation of the **NFS Server** are not covered in this document.
 
 #### (3) OpenMSA 
 
-Setup and installation of the **OpenMSA** are not covered in this document. Please refer to the [OpenMSA Installation Guide](https://www.openmsa.co/documentation/getting-started-with-the-openmsa-freeware/)
+Setup and installation of the **OpenMSA** are not covered in this document. Please refer to the [OpenMSA Installation Guide](https://www.openmsa.co/documentation/getting-started-with-the-openmsa-freeware/).
 </br>Please prepare it in advance.
 
 #### (4) 10 VMs for the NAL Components
@@ -54,12 +54,14 @@ Recommended VM Configuration:
 ```
 
 4-2 Switch to `ansible` user.
-
-`# su - ansible`
+```
+# su - ansible
+```
 
 4-3 Update the inventory source file according to the target configuration.
-
-`$ vi /home/ansible/nal/hosts.ini`
+```
+$ vi /home/ansible/nal/hosts.ini
+```
 ```ini
 [nallbservers]
 <NAL Web-LB #1 Hostname> ansible_host=<NAL Web-LB #1 IP Address for SVmng> is_first_active_node=active  index=0
@@ -83,8 +85,9 @@ Recommended VM Configuration:
 ...
   ```
 4-4 Update the ansible configuration file according to the target configuration settings.
-
-`$ vi /home/ansible/nal/group_vars/all/common.yml`
+```
+$ vi /home/ansible/nal/group_vars/all/common.yml
+```
 
 4-5 Update the initial data for NAL DB
 
@@ -111,7 +114,7 @@ $ cp –f nal-template.tar.gz ~/nal/playbooks/roles/nal_initdb/files/.
 $ cd ~/nal/playbooks/roles/nal_nwa/files/
 $ scp –p root@<OpenMSA IP Address>:/root/.ssh/id_rsa.pub id_rsa_msa_to_intersec.pub
 ```
-   _**NOTE**: If the OpenMSA public key does not exists, please create one._
+   _**NOTE**: If the OpenMSA public key does not exist, please create one._
    
 4-7 Get the `<userID>` (UID) of the Ansible User
 ```
@@ -120,7 +123,7 @@ ansible:x:1001:1001::/home/ansible:/bin/bash
 ```
 The response is delimited by a colon `:`. It is the 3rd value from the left.
 
-4-8 Get the public key of the “Ansible Controller” Node
+4-8 Get the public key of the "Ansible Controller Node".
 ```
 $ cd /home/ansible/.ssh
 $ cat id_rsa.pub
@@ -130,8 +133,9 @@ $ cat id_rsa.pub
 On each NAL Component VM, perform the following steps
 
 5-1 Login as root and create the `ansible` user (_if it does not exist yet_)
-
-`# useradd -d /home/ansible -m ansible -u <userID>`
+```
+# useradd -d /home/ansible -m ansible -u <userID>
+```
 
 **NOTE:** `<userID>` is the value retrieved from step 4-7.
 
@@ -150,7 +154,7 @@ $ exit
 ```
 # visudo
 …
-ansible ALL=(ALL)       NOPASSWD:ALL               ## add this line
+ansible ALL=(ALL)       NOPASSWD:ALL                               ## add this line
 ```
 5-4 Update the SSH Settings as shown below.
 ```
@@ -163,7 +167,7 @@ PubkeyAuthentication yes
 ```
 5-5 Generate the authentication key for each NAL component server pair. 
 
-5-5-1 Run the following commands on each VM#1 node.
+Run the following commands on each `VM#1` node then copy the public key to the pair node - `VM#2`.
 ```
 # ssh-keygen -t rsa
 Generating public/private rsa key pair.
@@ -173,13 +177,11 @@ Enter same passphrase again:                                       ##Press the e
 Your identification has been saved in /root/.ssh/id_rsa.
 Your public key has been saved in /root/.ssh/id_rsa.pub.
 ...
+# ssh-copy-id -i ~/.ssh/id_rsa.pub root@<NAL XX#2>
 ```
-5-5-2 Copy the public key to the pair node - `VM#2`.
-
-`# ssh-copy-id -i ~/.ssh/id_rsa.pub root@<NAL XX#2>`
 
 #### (6) Check the connection
-Check if SSH connection using the public key is possible
+Check if SSH connection using the public key is possible.
 
 6-1 Login to the "Ansible Controller Node and check the connection to each of the NAL Component VMs.
 ```
@@ -187,10 +189,12 @@ Check if SSH connection using the public key is possible
 $ ssh -i ~/.ssh/id_rsa ansible@<NAL VM SVmng IP Address>
 ```
 6-2 For each NAL Component, login to NAL #1 VM and check the connection to NAL #2 VM.
-
-`# ssh -i ~/.ssh/id_rsa root@<SVmng IP Address of #2>`
+```
+# ssh -i ~/.ssh/id_rsa root@<SVmng IP Address of #2>
+```
 
 _**Note:** The tool connects to each target host via SSH using an authentication key. Since a confirmation prompt is displayed during SSH initial connection, make sure to run these steps. The tool may not work properly if in case input is requested during installation operation._
+
 
 ### ■ INSTALLATION
 #### (1)	Run the installation tool. 
